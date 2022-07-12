@@ -13,11 +13,13 @@
 
 int _printf(const char *format, ...)
 {
-	va_list ap;
 	unsigned int b_cnt = 0, i = 0;
+	va_list ap;
 
-	if (format == NULL)
+	if (!format || (format[i] == '%' && !format[i + 1]))
 		return (-1);
+	if (!format[i])
+		return (0);
 	va_start(ap, format);
 
 	while (format[i])
@@ -27,6 +29,7 @@ int _printf(const char *format, ...)
 			i++;
 
 			b_cnt += char_num_handler(format[i], ap);
+
 		}
 		else
 		{
