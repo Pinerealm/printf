@@ -56,11 +56,8 @@ return (1);
  *
  */
 
-int print_percent(va_list ap)
+int print_percent()
 {
-char c;
-c = (va_arg(ap, int));
-
-_putchar(c);
+_putchar('%');
 return (1);
 }
