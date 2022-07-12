@@ -33,7 +33,6 @@ int _printf(const char *format, ...)
 			case 'c':
 			{
 				buff[j] = (char)va_arg(vl, int);
-				j++;
 				break;
 			}
 			/* Convert decimal */
@@ -85,8 +84,3 @@ int _printf(const char *format, ...)
 		}
 		i++;
 	}
-	fwrite(buff, j, 1, stdout);
-	va_end(vl);
-	return j;
-}
-
