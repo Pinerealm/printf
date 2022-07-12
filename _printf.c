@@ -1,4 +1,7 @@
+#include <stdlib.h>
+#include <stdarg.h>
 #include "main.h"
+
 /**
  * _printf - custom-made printf implementation
  *
@@ -10,77 +13,34 @@
 
 int _printf(const char *format, ...)
 {
-	va_list vl;
-	int i = 0, j = 0;
-	char buff[100] = {0}, tmp[20];
-	char *str_arg;
+	int b_cnt = 0, i = 0, cnt = 0;
+	va_list ap;
 
-	va_start(vl, format);
-	while (format && format[i])
+	if (!format)
+		return (-1);
+	va_start(ap, format);
+
+	while (format[i])
 	{
-		if (format[i] == '%')
+		if (format[i] != '%')
 		{
-			i++;
-			switch (format[i])
-			{
-			case '%':
-			{
-				buff[j] = format[i];
-				j++;
-				break;
-			}
-			/* Convert char */
-			case 'c':
-			{
-				buff[j] = (char)va_arg(vl, int);
-				break;
-			}
-			/* Convert decimal */
-			case 'd':
-			{
-				_itoa(va_arg(vl, int), tmp, 10);
-				strcpy(&buff[j], tmp);
-				j += num_to_string(vl, format[i]);
-				break;
-			}
-			/* Convert decimal */
-			case 'i':
-			{
-				_itoa(va_arg(vl, int), tmp, 10);
-				strcpy(&buff[j], tmp);
-				j += strlen(tmp);
-				break;
-			}
-			/* Convert hex */
-			case 'x':
-			{
-				_itoa(va_arg(vl, int), tmp, 16);
-				strcpy(&buff[j], tmp);
-				j += strlen(tmp);
-				break;
-			}
-			/* Convert octal */
-			case 'o':
-			{
-				_itoa(va_arg(vl, int), tmp, 8);
-				strcpy(&buff[j], tmp);
-				j += strlen(tmp);
-				break;
-			}
-			/* copy string */
-			case 's':
-			{
-				str_arg = va_arg(vl, char *);
-				strcpy(&buff[j], str_arg);
-				j += strlen(str_arg);
-				break;
-			}
-			}
+			_putchar(format[i]);
+			b_cnt++, i++;
+			continue;
 		}
-		else
+		if (format[i + 1] == '%')
 		{
-			buff[j] = format[i];
-			j++;
+			_putchar('%');
+			i += 2, b_cnt++;
+			continue;
 		}
-		i++;
+		if (format[i + 1] == '\0')
+			return (-1);
+
+		cnt = char_num_handler(format[i + 1], ap);
+		b_cnt += cnt;
+		i += 2;
 	}
+	va_end(ap);
+	return (b_cnt);
+}
