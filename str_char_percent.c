@@ -22,8 +22,8 @@ _putchar('\n');
 for (i = 0; point[i] != '\0'; i++)
 {
 _putchar(point[i]);
-return (i);
 }
+return (i);
 }
 
 /**
