@@ -11,35 +11,29 @@
 
 int char_num_handler(const char c, va_list ap)
 {
-	unsigned int cnt = 0, i;
-	char *str;
+unsigned int cnt = 0;
 
-	switch (c)
-	{
-	case 'c':
-		_putchar(va_arg(ap, int));
-		cnt++;
-		break;
-	case 's':
-		i = 0;
-		str = va_arg(ap, char *);
-		while (str[i] != '\0')
-		{
-			_putchar(str[i]);
-			cnt++, i++;
-		}
-		break;
-	case '%':
-		_putchar('%');
-		cnt++;
-		break;
-	case 'd':
-		cnt += print_number(va_arg(ap, int));
-		break;
-	case 'i':
-		cnt += print_number(va_arg(ap, int));
-		break;
-	}
+switch (c)
+{
+case 'c':
+print_char(ap);
+cnt++;
+break;
+case 's':
+print_string(ap);
+cnt++;
+break;
+case '%':
+_putchar('%');
+cnt++;
+break;
+case 'd':
+cnt += print_integers(ap);
+break;
+case 'i':
+cnt += print_integers(ap);
+break;
+}
 
-	return (cnt);
+return (cnt);
 }
