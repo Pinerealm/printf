@@ -15,7 +15,7 @@ int print_number(int n)
 	{
 		_putchar('-');
 		cnt++;
-		num = -num;
+		num++;
 	}
 	if (num > 9)
 	{
@@ -23,6 +23,7 @@ int print_number(int n)
 		cnt++;
 	}
 	_putchar(num % 10 + '0');
+	cnt++;
 
 	return (cnt);
 }
