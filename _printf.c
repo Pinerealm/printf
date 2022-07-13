@@ -20,32 +20,20 @@ int _printf(const char *format, ...)
 			switch (format[i])
 			{
 			case '%':
-			{
-				buff[j] = '%';
-				j++;
-				break;
-			}
+			buff[j] = '%', j++;
+			break;
 			case 'c':
-			{
-				buff[j] = (char)va_arg(vl, int);
-				j++;
-				break;
-			}
+			buff[j] = (char)va_arg(vl, int), j++;
+			break;
 			case 'd':
 			case 'i':
-			{
-				_itoa(va_arg(vl, int), tmp, 10);
-				strcpy(&buff[j], tmp);
-				j += strlen(tmp);
-				break;
-			}
+			_itoa(va_arg(vl, int), tmp, 10), strcpy(&buff[j], tmp);
+			j += strlen(tmp);
+			break;	
 			case 's':
-			{
-				str_arg = va_arg(vl, char *);
-				strcpy(&buff[j], str_arg);
-				j += strlen(str_arg);
-				break;
-			}
+			str_arg = va_arg(vl, char *);strcpy(&buff[j], str_arg);
+			j += strlen(str_arg);	
+			break;
 			}
 		}
 		else
@@ -55,7 +43,6 @@ int _printf(const char *format, ...)
 		}
 		i++;
 	}
-  fwrite(buff, j, 1, stdout);
-  va_end(vl);
+  write(1, buff, j), va_end(vl);
   return (j);
 }
