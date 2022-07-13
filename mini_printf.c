@@ -48,6 +48,6 @@ int mini_printf(const char *format, ...)
     }
     i++;
   }
-  fwrite(buff, j, 1, stdout); va_end(vl);
+  write(1, buff, j), va_end(vl);
   return (j);
 }
