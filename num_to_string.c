@@ -40,7 +40,7 @@ int num_to_string(va_list vl, const char c)
 		j += strlen(tmp);
 		break;
 	}
-	
+
 	return (j);
 }
 

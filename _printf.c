@@ -11,6 +11,7 @@ int _printf(const char *format, ...)
 	int i = 0, j = 0;
 	char buff[100] = {0}, tmp[20];
 	char *str_arg;
+
 	va_start(vl, format);
 	while (format && format[i])
 	{
@@ -29,10 +30,10 @@ int _printf(const char *format, ...)
 			case 'i':
 			_itoa(va_arg(vl, int), tmp, 10), strcpy(&buff[j], tmp);
 			j += strlen(tmp);
-			break;	
+			break;
 			case 's':
-			str_arg = va_arg(vl, char *);strcpy(&buff[j], str_arg);
-			j += strlen(str_arg);	
+			str_arg = va_arg(vl, char *), strcpy(&buff[j], str_arg);
+			j += strlen(str_arg);
 			break;
 			}
 		}
@@ -43,6 +44,6 @@ int _printf(const char *format, ...)
 		}
 		i++;
 	}
-  write(1, buff, j), va_end(vl);
-  return (j);
+	write(1, buff, j), va_end(vl);
+	return (j);
 }
