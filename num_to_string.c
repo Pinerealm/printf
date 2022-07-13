@@ -17,25 +17,25 @@ int num_to_string(va_list vl, const char c)
 	{
 	/* Convert decimal */
 	case 'd':
-		_itoa(va_arg(vl, int), tmp, 10);
+		convert(va_arg(vl, int), tmp, 10);
 		strcpy(&buff[j], tmp);
 		j += strlen(tmp);
 		break;
 	/* Convert decimal */
 	case 'i':
-		_itoa(va_arg(vl, int), tmp, 10);
+		convert(va_arg(vl, int), tmp, 10);
 		strcpy(&buff[j], tmp);
 		j += strlen(tmp);
 		break;
 	/* Convert hex */
 	case 'x':
-		_itoa(va_arg(vl, int), tmp, 16);
+		convert(va_arg(vl, int), tmp, 16);
 		strcpy(&buff[j], tmp);
 		j += strlen(tmp);
 		break;
 	/* Convert octal */
 	case 'o':
-		_itoa(va_arg(vl, int), tmp, 8);
+		convert(va_arg(vl, int), tmp, 8);
 		strcpy(&buff[j], tmp);
 		j += strlen(tmp);
 		break;

@@ -28,7 +28,7 @@ int _printf(const char *format, ...)
 			break;
 			case 'd':
 			case 'i':
-			_itoa(va_arg(vl, int), tmp, 10), _strcpy(&buff[j], tmp);
+			convert(va_arg(vl, int), tmp, 10), strcpy(&buff[j], tmp);
 			j += strlen(tmp);
 			break;
 			case 's':
