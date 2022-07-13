@@ -13,6 +13,9 @@ int print_string(va_list ap);
 int print_number(int n);
 int char_num_handler(const char c, va_list ap);
 int num_to_string(va_list vl, const char c);
+void swap(char *x, char *y);
+char* reverse(char *buffer, int i, int j);
+char* convert(int value, char* buffer, int base);
 
 
 
