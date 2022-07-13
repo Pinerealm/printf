@@ -1,9 +1,9 @@
 #include "main.h"
 /**
  * _printf - custom-made printf implementation
- *@format: format specifier char
+ * @format: format specifier char
  * @...: optional arguments
- *Return: number of bytes written
+ * Return: number of bytes written
  */
 int _printf(const char *format, ...)
 {
@@ -28,11 +28,11 @@ int _printf(const char *format, ...)
 			break;
 			case 'd':
 			case 'i':
-			_itoa(va_arg(vl, int), tmp, 10), strcpy(&buff[j], tmp);
+			_itoa(va_arg(vl, int), tmp, 10), _strcpy(&buff[j], tmp);
 			j += strlen(tmp);
 			break;
 			case 's':
-			str_arg = va_arg(vl, char *), strcpy(&buff[j], str_arg);
+			str_arg = va_arg(vl, char *), _strcpy(&buff[j], str_arg);
 			j += strlen(str_arg);
 			break;
 			}
