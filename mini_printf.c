@@ -1,11 +1,16 @@
+
 #include "main.h"
+
 /**
- * _printf - custom-made printf implementation
- *@format: format specifier char
+ * mini_printf - custom-made printf implementation
+ *
+ * @format: format specifier char
  * @...: optional arguments
- *Return: number of bytes written
+ *
+ * Return: number of bytes written
  */
-int _printf(const char *format, ...)
+
+int mini_printf(const char *format, ...)
 {
   va_list vl; int i = 0, j = 0; char buff[100] = {0}, tmp[20]; char *str_arg;
   va_start(vl, format);
