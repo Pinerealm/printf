@@ -51,12 +51,11 @@ return (1);
  * print_percent- Function that prints a character
  * Description: This function prints
  *
- *@ap: varaiable parameter
  * Return: number of character
  *
  */
 
-int print_percent()
+int print_percent(void)
 {
 _putchar('%');
 return (1);
