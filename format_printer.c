@@ -21,7 +21,8 @@ int format_printer(const char *format, int *idx, va_list ap, char *buffer,
 	int i, added_len = 0, byte_count = -1;
 	fmt_spec fmt_lib[] = {
 		{'c', print_char}, {'s', print_str}, {'%', print_percent},
-		{'i', print_int}, {'d', print_int}, {'\0', NULL}
+		{'i', print_int}, {'d', print_int}, {'u', print_unsigned},
+		{'\0', NULL}
 	};
 
 	for (i = 0; fmt_lib[i].spec; i++)

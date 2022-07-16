@@ -137,3 +137,60 @@ int write_number(int idx, char *buffer, int flag, int width, int precision,
 		buffer[--idx] = extra_ch;
 	return (write(1, &buffer[idx], len));
 }
+
+/**
+ * handle_unsgnd - writes an unsigned number as a string while handling specs
+ *
+ * @is_neg: flag indicating if number is negative
+ * @idx: buffer index to start from
+ * @buffer: pointer to buffer
+ * @flag:  calculated flag
+ * @width: calculated width
+ * @precision: calculated precision
+ * @length_mod: calculated length modifier
+ *
+ * Return: number of bytes printed
+ */
+int handle_unsgnd(int is_neg, int idx, char *buffer,
+	int flag, int width, int precision, int length_mod)
+{
+	int len = BUFF_SIZE - ind - 1, i = 0;
+	char pad = ' ';
+
+	IGNORE(is_neg);
+	IGNORE(length_mod);
+
+	if (precision == 0 && idx == BUFFER_SIZE - 2 && buffer[idx] == '0')
+		return (0);
+
+	if (precision > 0 && precision < len)
+		pad = ' ';
+
+	while (precision > len)
+	{
+		buffer[--idx] = '0';
+		len++;
+	}
+
+	if ((flag & F_ZERO) && !(flag & F_MINUS))
+		pad = '0';
+
+	if (width > len)
+	{
+		for (i = 0; i < width - len; i++)
+			buffer[i] = pad;
+
+		buffer[i] = '\0';
+
+		if (flag & F_MINUS)
+		{
+			return (write(1, &buffer[idx], len) + write(1, &buffer[0], i));
+		}
+		else
+		{
+			return (write(1, &buffer[0], i) + write(1, &buffer[idx], len));
+		}
+	}
+
+	return (write(1, &buffer[idx], len));
+}

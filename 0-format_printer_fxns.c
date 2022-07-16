@@ -147,3 +147,40 @@ int print_int(va_list ap, char *buffer,
 	return (handle_number(is_neg, i, buffer, flag, width, precision,
 				length_mod));
 }
+
+/**
+ * print_unsigned - Prints an unsigned number
+ *
+ * @ap: variable arg pointer
+ * @buffer: pointer to buffer
+ * @flag: calculated flag.
+ * @width: calculated width.
+ * @precision: calculated precision
+ * @length_mod: calculated length modifier
+ *
+ * Return: number of bytes printed
+ */
+int print_unsigned(va_list ap, char *buffer,
+	int flag, int width, int precision, int length_mod)
+{
+	int i = BUFFER_SIZE - 2;
+	unsigned long int num = va_arg(ap, unsigned long int);
+
+	num = convert_size_unsgnd(num, length_mod);
+
+	if (num == 0)
+		buffer[i--] = '0';
+
+	buffer[BUFFER_SIZE - 1] = '\0';
+
+	while (num > 0)
+	{
+		buffer[i--] = (num % 10) + '0';
+		num /= 10;
+	}
+
+	i++;
+
+	return (handle_unsgnd(0, i, buffer, flag, width, precision,
+				length_mod));
+}

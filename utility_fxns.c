@@ -31,3 +31,21 @@ long int convert_size_mode(long int num, int length_mod)
 
 	return ((int)num);
 }
+
+/**
+ * convert_size_unsgnd - Casts a number to the specified unsigned integer mode
+ *
+ * @num: Number to be casted
+ * @length_mod: Number indicating the type to be casted
+ *
+ * Return: Casted value of num
+ */
+long int convert_size_unsgnd(unsigned long int num, int length_mod)
+{
+	if (length_mod == LONG_SPEC)
+		return (num);
+	else if (length_mod == SHORT_SPEC)
+		return ((unsigned short)num);
+
+	return ((unsigned int)num);
+}
