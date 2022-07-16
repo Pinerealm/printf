@@ -58,9 +58,10 @@ int handle_char(char c, char *buffer,
 int handle_number(int is_neg, int idx, char *buffer,
 	int flag, int width, int precision, int length_mod);
 int write_number(int idx, char *buffer, int flag, int width, int precision,
-		int len, char pad, char extra_ch)
+		int len, char pad, char extra_ch);
 
 /* Support functions */
 int is_digit(char);
+long int convert_size_mode(long int num, int length_mod);
 
 #endif /* MAIN_H */
