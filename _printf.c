@@ -1,49 +1,50 @@
 #include "main.h"
+
 /**
- * _printf - custom-made printf implementation
- * @format: format specifier char
- * @...: optional arguments
+ * _printf - print formatted output to stdout
+ * @format: format specifier string
+ *
  * Return: number of bytes written
  */
+
 int _printf(const char *format, ...)
 {
-	va_list vl;
-	int i = 0, j = 0;
-	char buff[100] = {0}, tmp[20];
-	char *str_arg;
+	int fmt_bytes = 0, total_bytes = 0, buff_idx = 0;
+	int i, flag, width, precision, length_mod;
+	va_list ap;
+	char buffer[BUFFER_SIZE];
 
-	va_start(vl, format);
-	while (format && format[i])
+	if (!format)
+		return (-1);
+
+	va_start(ap, format);
+
+	for (i = 0; format && format[i]; i++)
 	{
-		if (format[i] == '%')
+		if (format[i] != '%')
 		{
-			i++;
-			switch (format[i])
-			{
-			case '%':
-			buff[j] = '%', j++;
-			break;
-			case 'c':
-			buff[j] = (char)va_arg(vl, int), j++;
-			break;
-			case 'd':
-			case 'i':
-			convert(va_arg(vl, int), tmp, 10), strcpy(&buff[j], tmp);
-			j += strlen(tmp);
-			break;
-			case 's':
-			str_arg = va_arg(vl, char *), _strcpy(&buff[j], str_arg);
-			j += strlen(str_arg);
-			break;
-			}
+			buffer[buff_idx++] = format[i];
+			if (buff_idx == BUFFER_SIZE)
+				print_buf(buffer, &buff_idx);
+			total_bytes++;
 		}
 		else
 		{
-			buff[j] = format[i];
-			j++;
+			print_buf(buffer, &buff_idx);
+			flag = get_flag(format, &i);
+			width = get_width(format, &i, ap);
+			precision = get_precision(format, &i, ap);
+			length_mod = get_length_mod(format, &i);
+			i++;
+			fmt_bytes = format_printer(format, &i, ap, buffer,
+					flag, width, precision, length_mod);
+			if (fmt_bytes == -1)
+				return (-1);
+			total_bytes += fmt_bytes;
 		}
-		i++;
 	}
-	write(1, buff, j), va_end(vl);
-	return (j);
+	print_buf(buffer, &buff_idx);
+	va_end(ap);
+
+	return (total_bytes);
 }
