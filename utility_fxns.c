@@ -13,3 +13,21 @@ int is_digit(char c)
 
 	return (0);
 }
+
+/**
+ * convert_size_mode - casts a number to the specified integer mode
+ *
+ * @num: number to be casted.
+ * @length_mod: number indicating type to be casted to.
+ *
+ * Return: casted value of num
+ */
+long int convert_size_mode(long int num, int length_mod)
+{
+	if (length_mod == LONG_SPEC)
+		return (num);
+	else if (length_mod == SHORT_SPEC)
+		return ((short)num);
+
+	return ((int)num);
+}

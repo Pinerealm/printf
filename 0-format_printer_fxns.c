@@ -101,3 +101,49 @@ int print_percent(va_list ap, char *buffer,
 
 	return (write(1, "%%", 1));
 }
+
+/**
+ * print_int - prints an integer
+ *
+ * @ap: variable arg pointer
+ * @buffer: pointer to buffer
+ * @flag:  calculated flag.
+ * @width: calculated width.
+ * @precision: calculated precision
+ * @length_mod: calculated length modifier
+ *
+ * Return: number of bytes printed
+ */
+int print_int(va_list ap, char *buffer,
+	int flag, int width, int precision, int length_mod)
+{
+	int i = BUFFER_SIZE - 2;
+	int is_neg = 0;
+	long int n = va_arg(ap, long int);
+	unsigned long int num;
+
+	n = convert_size_mode(n, length_mod);
+
+	if (n == 0)
+		buffer[i--] = '0';
+
+	buffer[BUFFER_SIZE - 1] = '\0';
+	num = (unsigned long int)n;
+
+	if (n < 0)
+	{
+		num = (unsigned long int)((-1) * n);
+		is_neg = 1;
+	}
+
+	while (num > 0)
+	{
+		buffer[i--] = (num % 10) + '0';
+		num /= 10;
+	}
+
+	i++;
+
+	return (handle_number(is_neg, i, buffer, flag, width, precision,
+				length_mod));
+}

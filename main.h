@@ -50,10 +50,15 @@ int print_char(va_list ap, char *buffer,
 	int flags, int width, int precision, int length_mod);
 int print_str(va_list, char *, int, int, int, int);
 int print_percent(va_list, char *, int, int, int, int);
+int print_int(va_list, char *, int, int, int, int);
 
 /* Format helper functions */
 int handle_char(char c, char *buffer,
 	int flag, int width, int precision, int length_mod);
+int handle_number(int is_neg, int idx, char *buffer,
+	int flag, int width, int precision, int length_mod);
+int write_number(int idx, char *buffer, int flag, int width, int precision,
+		int len, char pad, char extra_ch)
 
 /* Support functions */
 int is_digit(char);
