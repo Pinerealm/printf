@@ -154,7 +154,7 @@ int write_number(int idx, char *buffer, int flag, int width, int precision,
 int handle_unsgnd(int is_neg, int idx, char *buffer,
 	int flag, int width, int precision, int length_mod)
 {
-	int len = BUFF_SIZE - ind - 1, i = 0;
+	int len = BUFFER_SIZE - idx - 1, i = 0;
 	char pad = ' ';
 
 	IGNORE(is_neg);
