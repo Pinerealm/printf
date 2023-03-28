@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * _printf - custom-made printf implementation
@@ -57,6 +58,7 @@ int handle_format(const char c, va_list ap)
 		case 'd':
 		case 'i':
 			printed += print_number(va_arg(ap, int));
+			printf("\nNumber of bytes written: %d\n", printed);
 			break;
 		case 'b':
 			printed += print_binary(va_arg(ap, unsigned long int));
@@ -104,13 +106,10 @@ int print_number(int n)
 		n = -n;
 	}
 	num = n;
-	if (num / 10 == 0)
-		printed += _putchar(num + '0');
-	else
-	{
+	if (num / 10)
 		printed += print_number(num / 10);
-		printed += _putchar(num % 10 + '0');
-	}
+	printed += _putchar(num % 10 + '0');
+
 	return (printed);
 }
 
