@@ -20,7 +20,7 @@ int _printf(const char *format, ...)
 	{
 		if (format[f_idx] == '%')
 		{
-			if (!format[f_idx + 1])
+			if (!format[f_idx + 1]) /* if % is the last char */
 				return (-1);
 			printed += handle_format(format[++f_idx], ap);
 			f_idx++;
@@ -33,7 +33,7 @@ int _printf(const char *format, ...)
 }
 
 /**
- * handle_format - handles format specifier
+ * handle_format - handles the format specifier(s)
  * @c: format specifier
  * @ap: va_list
  *
@@ -96,13 +96,14 @@ int print_string(char *str)
 int print_number(int n)
 {
 	int printed = 0;
-	long int num = (long int)n;
+	unsigned int num;
 
 	if (n < 0)
 	{
 		printed += _putchar('-');
-		num *= -1;
+		n = -n;
 	}
+	num = n;
 	if (num / 10)
 		print_number(num / 10);
 	printed += _putchar(num % 10 + '0');
