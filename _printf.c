@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * _printf - custom-made printf implementation
@@ -58,7 +57,6 @@ int handle_format(const char c, va_list ap)
 		case 'd':
 		case 'i':
 			printed += print_number(va_arg(ap, int));
-			printf("\nNumber length: %d\n", printed);
 			break;
 		case 'b':
 			printed += print_binary(va_arg(ap, unsigned long int));
