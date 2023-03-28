@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * _printf - custom-made printf implementation
@@ -22,7 +21,7 @@ int _printf(const char *format, ...)
 		if (format[f_idx] == '%')
 		{
 			if (!format[f_idx + 1])
-				break;
+				return (-1);
 			printed += handle_format(format[++f_idx], ap);
 			f_idx++;
 		}
