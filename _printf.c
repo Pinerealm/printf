@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * _printf - custom-made printf implementation
@@ -18,14 +19,15 @@ int _printf(const char *format, ...)
 
 	while (format[f_idx])
 	{
-		if (format[f_idx] != '%')
-			printed += _putchar(format[f_idx++]);
-		else
+		if (format[f_idx] == '%')
 		{
+			if (!format[f_idx + 1])
+				break;
 			printed += handle_format(format[++f_idx], ap);
-			if (format[f_idx])
-				f_idx++;
+			f_idx++;
 		}
+		else
+			printed += _putchar(format[f_idx++]);
 	}
 	va_end(ap);
 	return (printed);
@@ -59,8 +61,6 @@ int handle_format(const char c, va_list ap)
 			break;
 		case 'b':
 			printed += print_binary(va_arg(ap, unsigned long int));
-			break;
-		case '\0':
 			break;
 		default:
 			printed += _putchar('%');
