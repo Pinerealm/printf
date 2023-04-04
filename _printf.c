@@ -59,7 +59,7 @@ int handle_format(const char c, va_list ap)
 			printed += print_number(va_arg(ap, int));
 			break;
 		case 'b':
-			printed += print_binary(va_arg(ap, unsigned long int));
+			printed += print_binary(va_arg(ap, unsigned int));
 			break;
 		default:
 			printed += _putchar('%');
@@ -120,13 +120,10 @@ int print_number(int n)
 int print_binary(unsigned int n)
 {
 	int printed = 0;
-	unsigned long int num = (unsigned long int)n;
 
-	if (num / 2)
-		print_binary(num / 2);
-	if (num == 0)
-		printed += _putchar('0');
-	printed += _putchar(num % 2 + '0');
+	if (n > 1)
+		printed += print_binary(n >> 1);
+	printed += _putchar((n & 1) + '0');
 
 	return (printed);
 }
