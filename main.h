@@ -20,8 +20,8 @@ int _putchar(char c);
 int handle_format(const char c, va_list ap);
 int print_string(va_list ap);
 
-int print_number(va_list ap);
-int print_number_helper(unsigned int n);
+int print_decimal(va_list ap);
+int print_decimal_helper(unsigned int n);
 int print_char(va_list ap);
 int print_percent(va_list ap);
 

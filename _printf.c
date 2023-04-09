@@ -44,8 +44,8 @@ int handle_format(const char c, va_list ap)
 	int printed = 0, f_idx = 0;
 	format_t formats[] = {
 		{'c', print_char}, {'%', print_percent},
-		{'s', print_string}, {'d', print_number},
-		{'i', print_number}, {'b', print_binary},
+		{'s', print_string}, {'d', print_decimal},
+		{'i', print_decimal}, {'b', print_binary},
 		{0, NULL}
 	};
 

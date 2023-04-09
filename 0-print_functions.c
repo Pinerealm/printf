@@ -19,12 +19,12 @@ int print_string(va_list ap)
 }
 
 /**
- * print_number - prints an integer
+ * print_decimal - prints a number as a signed decimal
  * @ap: pointer to the argument list
  *
  * Return: number of bytes written
  */
-int print_number(va_list ap)
+int print_decimal(va_list ap)
 {
 	int n = va_arg(ap, int), printed = 0;
 	unsigned int num;
@@ -35,7 +35,7 @@ int print_number(va_list ap)
 		n = -n;
 	}
 	num = n;
-	return (printed + print_number_helper(num));
+	return (printed + print_decimal_helper(num));
 }
 
 /**

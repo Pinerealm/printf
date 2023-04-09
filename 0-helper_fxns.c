@@ -18,17 +18,17 @@ int print_binary_helper(unsigned int n)
 }
 
 /**
- * print_number_helper - helper function for print_number function
+ * print_decimal_helper - helper function for print_decimal function
  * @n: number to print
  *
  * Return: number of bytes written
  */
-int print_number_helper(unsigned int n)
+int print_decimal_helper(unsigned int n)
 {
 	int printed = 0;
 
 	if (n / 10)
-		printed += print_number_helper(n / 10);
+		printed += print_decimal_helper(n / 10);
 	printed += _putchar(n % 10 + '0');
 
 	return (printed);
