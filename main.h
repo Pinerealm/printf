@@ -15,6 +15,7 @@ typedef struct format
 	int (*f)(va_list);
 } format_t;
 
+/* Function prototypes */
 int _printf(const char *format, ...);
 int _putchar(char c);
 int handle_format(const char c, va_list ap);
@@ -27,5 +28,7 @@ int print_percent(va_list ap);
 
 int print_binary(va_list ap);
 int print_binary_helper(unsigned int n);
+int print_octal(va_list ap);
+int print_octal_helper(unsigned int n);
 
 #endif /* MAIN_H */

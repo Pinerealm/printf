@@ -46,7 +46,7 @@ int handle_format(const char c, va_list ap)
 		{'c', print_char}, {'%', print_percent},
 		{'s', print_string}, {'d', print_decimal},
 		{'i', print_decimal}, {'b', print_binary},
-		{0, NULL}
+		{'o', print_octal}, {0, NULL}
 	};
 
 	while (formats[f_idx].c)

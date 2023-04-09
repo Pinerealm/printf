@@ -33,3 +33,20 @@ int print_decimal_helper(unsigned int n)
 
 	return (printed);
 }
+
+/**
+ * print_octal_helper - helper for print_octal function
+ * @n: number to print
+ *
+ * Return: number of bytes written
+ */
+int print_octal_helper(unsigned int n)
+{
+	int printed = 0;
+
+	if (n / 8)
+		printed += print_octal_helper(n / 8);
+	printed += _putchar(n % 8 + '0');
+
+	return (printed);
+}
