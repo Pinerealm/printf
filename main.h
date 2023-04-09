@@ -31,4 +31,6 @@ int print_binary_helper(unsigned int n);
 int print_octal(va_list ap);
 int print_octal_helper(unsigned int n);
 
+int print_unsigned_decimal(va_list ap);
+
 #endif /* MAIN_H */
