@@ -2,14 +2,14 @@
 
 /**
  * print_string - prints a string
- * @str: string to print
+ * @ap: pointer to the argument list
  *
  * Return: number of bytes written
  */
-int print_string(char *str)
+int print_string(va_list ap)
 {
 	int printed = 0, idx = 0;
-	char *buf = str;
+	char *buf = va_arg(ap, char *);
 
 	if (!buf)
 		buf = "(null)";
@@ -20,14 +20,14 @@ int print_string(char *str)
 
 /**
  * print_number - prints an integer
- * @n: integer to print
+ * @ap: pointer to the argument list
  *
  * Return: number of bytes written
  */
-int print_number(int n)
+int print_number(va_list ap)
 {
+	int n = va_arg(ap, int), printed = 0;
 	unsigned int num;
-	int printed = 0;
 
 	if (n < 0)
 	{
@@ -35,26 +35,41 @@ int print_number(int n)
 		n = -n;
 	}
 	num = n;
-	if (num / 10)
-		printed += print_number(num / 10);
-	printed += _putchar(num % 10 + '0');
-
-	return (printed);
+	return (printed + print_number_helper(num));
 }
 
 /**
  * print_binary - prints a number in binary
- * @n: number to print
+ * @ap: pointer to the argument list
  *
  * Return: number of bytes written
  */
-int print_binary(unsigned int n)
+int print_binary(va_list ap)
 {
-	int printed = 0;
+	unsigned int n = va_arg(ap, unsigned int);
 
-	if (n > 1)
-		printed += print_binary(n >> 1);
-	printed += _putchar((n & 1) + '0');
+	return (print_binary_helper(n));
+}
 
-	return (printed);
+/**
+ * print_char - prints a character
+ * @ap: pointer to the argument list
+ *
+ * Return: number of bytes written
+ */
+int print_char(va_list ap)
+{
+	return (_putchar(va_arg(ap, int)));
+}
+
+/**
+ * print_percent - prints a percent sign
+ * @ap: pointer to the argument list
+ *
+ * Return: number of bytes written
+ */
+int print_percent(va_list ap)
+{
+	(void)ap;
+	return (_putchar('%'));
 }

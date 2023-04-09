@@ -41,31 +41,23 @@ int _printf(const char *format, ...)
  */
 int handle_format(const char c, va_list ap)
 {
-	int printed = 0;
+	int printed = 0, f_idx = 0;
+	format_t formats[] = {
+		{'c', print_char}, {'%', print_percent},
+		{'s', print_string}, {'d', print_number},
+		{'i', print_number}, {'b', print_binary},
+		{0, NULL}
+	};
 
-	switch (c)
+	while (formats[f_idx].c)
 	{
-		case 'c':
-			printed += _putchar(va_arg(ap, int));
-			break;
-		case 's':
-			printed += print_string(va_arg(ap, char *));
-			break;
-		case '%':
-			printed += _putchar('%');
-			break;
-		case 'd':
-		case 'i':
-			printed += print_number(va_arg(ap, int));
-			break;
-		case 'b':
-			printed += print_binary(va_arg(ap, unsigned int));
-			break;
-		default:
-			printed += _putchar('%');
-			printed += _putchar(c);
-			break;
+		if (c == formats[f_idx].c)
+			return (formats[f_idx].f(ap));
+		f_idx++;
 	}
+	/* if no match is found */
+	printed += _putchar('%');
+	printed += _putchar(c);
+
 	return (printed);
 }
-
