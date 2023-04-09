@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * print_binary_helper - helper function for print_binary function
+ * print_binary_helper - helper for the print_binary function
  * @n: number to print
  *
  * Return: number of bytes written
@@ -18,7 +18,7 @@ int print_binary_helper(unsigned int n)
 }
 
 /**
- * print_decimal_helper - helper function for print_decimal function
+ * print_decimal_helper - helper for the print_decimal function
  * @n: number to print
  *
  * Return: number of bytes written
@@ -35,7 +35,7 @@ int print_decimal_helper(unsigned int n)
 }
 
 /**
- * print_octal_helper - helper for print_octal function
+ * print_octal_helper - helper for the print_octal function
  * @n: number to print
  *
  * Return: number of bytes written
@@ -47,6 +47,46 @@ int print_octal_helper(unsigned int n)
 	if (n / 8)
 		printed += print_octal_helper(n / 8);
 	printed += _putchar(n % 8 + '0');
+
+	return (printed);
+}
+
+/**
+ * print_hex_helper - helper for the print_hex function
+ * @n: number to print
+ *
+ * Return: number of bytes written
+ */
+int print_hex_helper(unsigned int n)
+{
+	int printed = 0;
+
+	if (n / 16)
+		printed += print_hex_helper(n / 16);
+	if (n % 16 < 10)
+		printed += _putchar(n % 16 + '0');
+	else
+		printed += _putchar(n % 16 - 10 + 'a');
+
+	return (printed);
+}
+
+/**
+ * print_hex_upper_helper - helper for the print_hex_upper function
+ * @n: number to print
+ *
+ * Return: number of bytes written
+ */
+int print_hex_upper_helper(unsigned int n)
+{
+	int printed = 0;
+
+	if (n / 16)
+		printed += print_hex_upper_helper(n / 16);
+	if (n % 16 < 10)
+		printed += _putchar(n % 16 + '0');
+	else
+		printed += _putchar(n % 16 - 10 + 'A');
 
 	return (printed);
 }

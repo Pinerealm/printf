@@ -32,5 +32,10 @@ int print_octal(va_list ap);
 int print_octal_helper(unsigned int n);
 
 int print_unsigned_decimal(va_list ap);
+int print_hex(va_list ap);
+int print_hex_helper(unsigned int n);
+int print_hex_upper(va_list ap);
+
+int print_hex_upper_helper(unsigned int n);
 
 #endif /* MAIN_H */
