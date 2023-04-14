@@ -83,7 +83,10 @@ int print_string_ascii(va_list ap)
 	{
 		if (*s < 32 || *s >= 127)
 		{
-			printed += write(1, "\\x", 2);
+			if (*s < 16)
+				printed += write(1, "\\x0", 3);
+			else
+				printed += write(1, "\\x", 2);
 			printed += print_hex_upper_helper(*s);
 		}
 		else
