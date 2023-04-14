@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <unistd.h>
+#define BUFFER_SIZE 1024
 
 /**
  * struct format - link between format specifier and function
@@ -37,5 +39,6 @@ int print_hex_helper(unsigned int n);
 int print_hex_upper(va_list ap);
 
 int print_hex_upper_helper(unsigned int n);
+int print_buffer(char *buffer, unsigned int *idx);
 
 #endif /* MAIN_H */
