@@ -64,3 +64,31 @@ int print_hex_upper(va_list ap)
 		return (_putchar('0'));
 	return (printed + print_hex_upper_helper(n));
 }
+
+/**
+ * print_string_ascii - prints a string with non-printable characters
+ * replaced by \x followed by the ASCII code in hexadecimal
+ * @ap: pointer to the argument list
+ *
+ * Return: number of bytes written
+ */
+int print_string_ascii(va_list ap)
+{
+	char *s = va_arg(ap, char *);
+	int printed = 0;
+
+	if (s == NULL)
+		s = "(null)";
+	while (*s)
+	{
+		if (*s < 32 || *s >= 127)
+		{
+			printed += write(1, "\\x", 2);
+			printed += print_hex_upper_helper(*s);
+		}
+		else
+			printed += _putchar(*s);
+		s++;
+	}
+	return (printed);
+}

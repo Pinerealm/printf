@@ -40,5 +40,6 @@ int print_hex_upper(va_list ap);
 
 int print_hex_upper_helper(unsigned int n);
 int print_buffer(char *buffer, unsigned int *idx);
+int print_string_ascii(va_list ap);
 
 #endif /* MAIN_H */

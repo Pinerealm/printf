@@ -57,7 +57,7 @@ int handle_format(const char c, va_list ap)
 		{'i', print_decimal}, {'b', print_binary},
 		{'o', print_octal}, {'u', print_unsigned_decimal},
 		{'x', print_hex}, {'X', print_hex_upper},
-		{0, NULL}
+		{'S', print_string_ascii}, {0, NULL}
 	};
 
 	while (formats[f_idx].c)
