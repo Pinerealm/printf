@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 1024
 
 /**
  * struct format - link between format specifier and function
