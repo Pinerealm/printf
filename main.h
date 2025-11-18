@@ -4,17 +4,17 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 2048
 
 /**
  * struct format - link between format specifier and function
- * @c: format specifier
+ * @spec: format specifier
  * @f: function to handle format specifier
  */
 typedef struct format
 {
-	char c;
-	int (*f)(va_list);
+	char spec;
+	int (*f)(va_list, char *, unsigned int *);
 } format_t;
 
 /* Function prototypes */
