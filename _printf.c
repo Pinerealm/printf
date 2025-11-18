@@ -11,7 +11,7 @@ int _printf(const char *format, ...)
 {
 	va_list ap;
 	unsigned int f_idx = 0, b_idx = 0;
-	long printed = 0;
+	int printed = 0;
 	char l_buf[BUFFER_SIZE];
 
 	if (!format)
@@ -28,8 +28,7 @@ int _printf(const char *format, ...)
 		{
 			if (!format[f_idx + 1]) /* if % is the last char */
 				return (-1);
-			printed += print_buffer(l_buf, &b_idx);
-			printed += handle_format(format[++f_idx], ap);
+			handle_format(format[++f_idx], ap, l_buf, &b_idx);
 			f_idx++;
 		}
 		else
@@ -45,10 +44,13 @@ int _printf(const char *format, ...)
  * handle_format - handles the format specifier(s)
  * @c: format specifier
  * @ap: va_list
+ * @buf: buffer to write to
+ * @b_idx: pointer to buffer index
  *
  * Return: number of bytes written
  */
-int handle_format(const char c, va_list ap)
+int
+handle_format(const char c, va_list ap, char *buf, unsigned int *b_idx)
 {
 	int printed = 0, f_idx = 0;
 	format_t formats[] = {
@@ -60,15 +62,15 @@ int handle_format(const char c, va_list ap)
 		{'S', print_string_ascii}, {0, NULL}
 	};
 
-	while (formats[f_idx].c)
+	while (formats[f_idx].spec)
 	{
-		if (c == formats[f_idx].c)
-			return (formats[f_idx].f(ap));
+		if (c == formats[f_idx].spec)
+			return (formats[f_idx].f(ap, buf, b_idx));
 		f_idx++;
 	}
-	/* if no match is found */
-	printed += _putchar('%');
-	printed += _putchar(c);
+	buf[(*b_idx)++] = '%';
+	buf[(*b_idx)++] = c;
+	printed = 2;
 
 	return (printed);
 }
