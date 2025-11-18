@@ -84,8 +84,15 @@ handle_format(const char c, va_list ap, char *buf, unsigned int *b_idx)
  */
 int print_buffer(char *buffer, unsigned int *b_idx)
 {
-	ssize_t written = write(1, buffer, *b_idx);
+	ssize_t written;
+
+	if (*b_idx == 0)
+		return (0);
+
+	written = write(1, buffer, *b_idx);
+	if (written == -1)
+		return (-1);
 
 	*b_idx = 0;
-	return (written);
+	return ((int)written);
 }
