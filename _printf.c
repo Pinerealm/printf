@@ -3,7 +3,12 @@
 static int process_specifier(const char *format, int *index,
 		va_list args, int *count);
 static int (*get_spec_handler(char spec))(va_list, flags_t *, int *);
-static void parse_flags(const char *format, int *i, flags_t *flags);
+static void parse_flags(const char *format, int *i, flags_t *flags,
+		va_list args);
+static void parse_width(const char *format, int *i, flags_t *flags,
+		va_list args);
+static void parse_precision(const char *format, int *i, flags_t *flags,
+		va_list args);
 
 /**
  * _printf - custom printf implementation
@@ -47,12 +52,75 @@ int _printf(const char *format, ...)
 }
 
 /**
+ * parse_width - parses the field width
+ * @format: format string
+ * @i: current index in format string
+ * @flags: flags struct to populate
+ * @args: variadic arguments list
+ */
+static void parse_width(const char *format, int *i, flags_t *flags,
+		va_list args)
+{
+	if (format[*i] == '*')
+	{
+		int w = va_arg(args, int);
+
+		flags->width = w;
+		if (w < 0)
+			flags->width = -w;
+		(*i)++;
+	}
+	else
+	{
+		while (format[*i] >= '0' && format[*i] <= '9')
+		{
+			flags->width = flags->width * 10 + (format[*i] - '0');
+			(*i)++;
+		}
+	}
+}
+
+/**
+ * parse_precision - parses the precision
+ * @format: format string
+ * @i: current index in format string
+ * @flags: flags struct to populate
+ * @args: variadic arguments list
+ */
+static void parse_precision(const char *format, int *i, flags_t *flags,
+		va_list args)
+{
+	if (format[*i] == '.')
+	{
+		(*i)++;
+		if (format[*i] == '*')
+		{
+			int p = va_arg(args, int);
+
+			flags->precision = (p < 0) ? -1 : p;
+			(*i)++;
+		}
+		else
+		{
+			flags->precision = 0;
+			while (format[*i] >= '0' && format[*i] <= '9')
+			{
+				flags->precision = flags->precision * 10 + (format[*i] - '0');
+				(*i)++;
+			}
+		}
+	}
+}
+
+/**
  * parse_flags - parses flags, width, and length modifiers
  * @format: format string
  * @i: current index in format string
  * @flags: flags struct to populate
+ * @args: variadic arguments list
  */
-static void parse_flags(const char *format, int *i, flags_t *flags)
+static void parse_flags(const char *format, int *i, flags_t *flags,
+		va_list args)
 {
 	/* Parse flags */
 	while (format[*i])
@@ -68,12 +136,8 @@ static void parse_flags(const char *format, int *i, flags_t *flags)
 		(*i)++;
 	}
 
-	/* Parse width */
-	while (format[*i] >= '0' && format[*i] <= '9')
-	{
-		flags->width = flags->width * 10 + (format[*i] - '0');
-		(*i)++;
-	}
+	parse_width(format, i, flags, args);
+	parse_precision(format, i, flags, args);
 
 	/* Parse length modifiers */
 	if (format[*i] == 'l')
@@ -101,10 +165,10 @@ static int process_specifier(const char *format, int *index,
 		va_list args, int *count)
 {
 	int (*handler)(va_list, flags_t *, int *);
-	flags_t flags = {0, 0, 0, 0, 0, 0};
+	flags_t flags = {0, 0, 0, 0, 0, 0, -1};
 	int i = *index + 1;
 
-	parse_flags(format, &i, &flags);
+	parse_flags(format, &i, &flags, args);
 
 	if (format[i] == '\0')
 		return (-1);
