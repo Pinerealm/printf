@@ -22,11 +22,23 @@ This project implements a custom `_printf()` function that replicates the core f
 - `%S` - String with non-printable characters as `\xXX`
 - `%%` - Literal percent sign
 
+### Supported Flags
+
+- `+` - Forces to precede the result with a plus or minus sign (+ or -) even for positive numbers.
+- `space` - If no sign is going to be written, a blank space is inserted before the value.
+- `#` - Used with o, x or X specifiers the value is preceded with 0, 0x or 0X respectively, for values different than zero.
+
+### Length Modifiers
+
+- `l` - Applies to: `d`, `i`, `u`, `o`, `x`, `X` (long int / unsigned long int)
+- `h` - Applies to: `d`, `i`, `u`, `o`, `x`, `X` (short int / unsigned short int)
+
 ### Special Behaviors
 
 - NULL strings print as `(null)`
 - NULL pointers print as `(nil)`
 - Unknown specifiers print literally (e.g., `%r` → `%r`)
+- Length modifiers are ignored for unknown specifiers (e.g., `%hZ` → `%Z`)
 - Non-printable characters in `%S` displayed as `\xXX` in uppercase hex
 
 ## Project Structure
