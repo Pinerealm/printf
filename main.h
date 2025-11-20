@@ -7,6 +7,19 @@
 #define BUFFER_SIZE 1024
 
 /**
+ * struct flags - flags to turn on
+ * @plus: flag for '+'
+ * @space: flag for ' '
+ * @hash: flag for '#'
+ */
+typedef struct flags
+{
+	int plus;
+	int space;
+	int hash;
+} flags_t;
+
+/**
  * struct spec_handler - maps a specifier to its handler
  * @spec: the conversion specifier character
  * @handler: pointer to the handler function
