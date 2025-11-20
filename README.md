@@ -62,6 +62,36 @@ This project implements a custom `_printf()` function that replicates the core f
 └── test_main/         # Test files (optional)
 ```
 
+## Usage
+
+```c
+#include "main.h"
+
+int main(void)
+{
+    int len;
+
+    len = _printf("Let's try to printf a simple sentence.\n");
+    _printf("Length:[%d, %i]\n", len, len);
+    _printf("Negative:[%d]\n", -762534);
+    _printf("Unsigned:[%u]\n", 2147483647);
+    _printf("Unsigned octal:[%o]\n", 2147483647);
+    _printf("Unsigned hexadecimal:[%x, %X]\n", 2147483647, 2147483647);
+    _printf("String:[%s]\n", "I am a string !");
+    _printf("Address:[%p]\n", (void *)0x7ffe637541f0);
+    _printf("Percent:[%%]\n");
+    _printf("Len:[%d]\n", len);
+    _printf("Unknown:[%r]\n");
+    
+    /* Width and Precision */
+    _printf("Width: %10d\n", 123);
+    _printf("Precision: %.5d\n", 123);
+    _printf("Dynamic: %*.*d\n", 10, 5, 123);
+
+    return (0);
+}
+```
+
 ## Building
 
 Compile with:
