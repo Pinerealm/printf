@@ -27,7 +27,7 @@ typedef struct flags
 typedef struct spec_handler
 {
 	char spec;
-	int (*handler)(va_list args, int *count);
+	int (*handler)(va_list args, flags_t *flags, int *count);
 } spec_handler_t;
 
 int _printf(const char *format, ...);
