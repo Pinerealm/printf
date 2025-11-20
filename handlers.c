@@ -57,7 +57,14 @@ int handle_percent(va_list args, flags_t *flags, int *count)
  */
 int handle_int(va_list args, flags_t *flags, int *count)
 {
-	int num = va_arg(args, int);
+	long num;
+
+	if (flags->long_num)
+		num = va_arg(args, long int);
+	else if (flags->short_num)
+		num = (short)va_arg(args, int);
+	else
+		num = va_arg(args, int);
 
 	if (flags->plus && num >= 0)
 	{
@@ -70,7 +77,7 @@ int handle_int(va_list args, flags_t *flags, int *count)
 			return (-1);
 	}
 
-	return (write_number((long)num, count));
+	return (write_number(num, count));
 }
 
 /**

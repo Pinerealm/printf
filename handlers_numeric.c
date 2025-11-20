@@ -26,10 +26,16 @@ int handle_binary(va_list args, flags_t *flags, int *count)
  */
 int handle_unsigned(va_list args, flags_t *flags, int *count)
 {
-	unsigned int num = va_arg(args, unsigned int);
+	unsigned long int num;
 
-	(void)flags;
-	return (write_unsigned_base((unsigned long int)num, 10, 0, count));
+	if (flags->long_num)
+		num = va_arg(args, unsigned long int);
+	else if (flags->short_num)
+		num = (unsigned short)va_arg(args, unsigned int);
+	else
+		num = va_arg(args, unsigned int);
+
+	return (write_unsigned_base(num, 10, 0, count));
 }
 
 /**
@@ -42,14 +48,21 @@ int handle_unsigned(va_list args, flags_t *flags, int *count)
  */
 int handle_octal(va_list args, flags_t *flags, int *count)
 {
-	unsigned int num = va_arg(args, unsigned int);
+	unsigned long int num;
+
+	if (flags->long_num)
+		num = va_arg(args, unsigned long int);
+	else if (flags->short_num)
+		num = (unsigned short)va_arg(args, unsigned int);
+	else
+		num = va_arg(args, unsigned int);
 
 	if (flags->hash && num != 0)
 	{
 		if (write_char('0', count) == -1)
 			return (-1);
 	}
-	return (write_unsigned_base((unsigned long int)num, 8, 0, count));
+	return (write_unsigned_base(num, 8, 0, count));
 }
 
 /**
@@ -62,7 +75,14 @@ int handle_octal(va_list args, flags_t *flags, int *count)
  */
 int handle_hex_lower(va_list args, flags_t *flags, int *count)
 {
-	unsigned int num = va_arg(args, unsigned int);
+	unsigned long int num;
+
+	if (flags->long_num)
+		num = va_arg(args, unsigned long int);
+	else if (flags->short_num)
+		num = (unsigned short)va_arg(args, unsigned int);
+	else
+		num = va_arg(args, unsigned int);
 
 	if (flags->hash && num != 0)
 	{
@@ -71,7 +91,7 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count)
 		if (write_char('x', count) == -1)
 			return (-1);
 	}
-	return (write_unsigned_base((unsigned long int)num, 16, 0, count));
+	return (write_unsigned_base(num, 16, 0, count));
 }
 
 /**
@@ -84,7 +104,14 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count)
  */
 int handle_hex_upper(va_list args, flags_t *flags, int *count)
 {
-	unsigned int num = va_arg(args, unsigned int);
+	unsigned long int num;
+
+	if (flags->long_num)
+		num = va_arg(args, unsigned long int);
+	else if (flags->short_num)
+		num = (unsigned short)va_arg(args, unsigned int);
+	else
+		num = va_arg(args, unsigned int);
 
 	if (flags->hash && num != 0)
 	{
@@ -93,5 +120,5 @@ int handle_hex_upper(va_list args, flags_t *flags, int *count)
 		if (write_char('X', count) == -1)
 			return (-1);
 	}
-	return (write_unsigned_base((unsigned long int)num, 16, 1, count));
+	return (write_unsigned_base(num, 16, 1, count));
 }

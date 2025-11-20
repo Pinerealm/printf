@@ -59,7 +59,7 @@ static int process_specifier(const char *format, int *index,
 		va_list args, int *count)
 {
 	int (*handler)(va_list, flags_t *, int *);
-	flags_t flags = {0, 0, 0};
+	flags_t flags = {0, 0, 0, 0, 0};
 	int i = *index + 1;
 
 	while (format[i])
@@ -70,6 +70,10 @@ static int process_specifier(const char *format, int *index,
 			flags.space = 1;
 		else if (format[i] == '#')
 			flags.hash = 1;
+		else if (format[i] == 'l')
+			flags.long_num = 1;
+		else if (format[i] == 'h')
+			flags.short_num = 1;
 		else
 			break;
 		i++;
