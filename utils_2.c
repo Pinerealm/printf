@@ -57,3 +57,32 @@ char get_sign_char(int is_neg, flags_t *flags)
 		return (' ');
 	return (0);
 }
+
+/**
+ * write_unsigned_base - writes an unsigned number in any base
+ * @num: number to write
+ * @base: base between 2 and 16
+ * @uppercase: non-zero for uppercase digits
+ * @count: pointer to printed characters count
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int write_unsigned_base(unsigned long int num, unsigned int base,
+		int uppercase, int *count)
+{
+	const char *digits_lower = "0123456789abcdef";
+	const char *digits_upper = "0123456789ABCDEF";
+	const char *digits;
+
+	if (base < 2 || base > 16)
+		return (-1);
+
+	digits = uppercase ? digits_upper : digits_lower;
+
+	if (num >= base)
+	{
+		if (write_unsigned_base(num / base, base, uppercase, count) == -1)
+			return (-1);
+	}
+	return (write_char(digits[num % base], count));
+}

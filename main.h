@@ -14,6 +14,7 @@
  * @long_num: flag for 'l' length modifier
  * @short_num: flag for 'h' length modifier
  * @width: field width
+ * @precision: precision specifier
  */
 typedef struct flags
 {
@@ -23,6 +24,7 @@ typedef struct flags
 	int long_num;
 	int short_num;
 	int width;
+	int precision;
 } flags_t;
 
 /**
@@ -40,8 +42,9 @@ int _printf(const char *format, ...);
 int flush_buffer(int *count);
 
 int write_char(char c, int *count);
-int write_string(const char *str, int *count);
-int write_number(long num, int *count);
+int write_string_len(const char *str, int len, int *count);
+int write_num_full(unsigned long int num, flags_t *flags, int base,
+		int uppercase, int *count);
 int write_unsigned_base(unsigned long int num, unsigned int base,
 		int uppercase, int *count);
 

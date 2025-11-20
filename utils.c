@@ -45,24 +45,17 @@ int write_char(char c, int *count)
 }
 
 /**
- * write_string - writes a string to stdout (buffered)
- * @str: string to write (uses "(null)" when NULL)
+ * write_string_len - writes a string up to len characters (buffered)
+ * @str: string to write
+ * @len: number of characters to write
  * @count: pointer to printed characters count
  *
  * Return: 0 on success, -1 on failure
  */
-int write_string(const char *str, int *count)
+int write_string_len(const char *str, int len, int *count)
 {
-	int len = 0, i, copy_len;
-	const char *null_str = "(null)";
+	int i = 0, copy_len;
 
-	if (!str)
-		str = null_str;
-
-	while (str[len])
-		len++;
-
-	i = 0;
 	while (i < len)
 	{
 		/* Calculate how much we can copy to buffer */
@@ -88,56 +81,56 @@ int write_string(const char *str, int *count)
 }
 
 /**
- * write_number - writes a signed decimal number
+ * write_num_full - writes a number with full formatting
  * @num: number to write
- * @count: pointer to printed characters count
- *
- * Return: 0 on success, -1 on failure
- */
-int write_number(long num, int *count)
-{
-	unsigned long int n;
-
-	if (num < 0)
-	{
-		if (write_char('-', count) == -1)
-			return (-1);
-		n = (unsigned long int)num;
-		n = -n;
-	}
-	else
-	{
-		n = (unsigned long int)num;
-	}
-
-	return (write_unsigned_base(n, 10, 0, count));
-}
-
-/**
- * write_unsigned_base - writes an unsigned number in any base
- * @num: number to write
- * @base: base between 2 and 16
+ * @flags: active flags
+ * @base: base of the number
  * @uppercase: non-zero for uppercase digits
  * @count: pointer to printed characters count
  *
  * Return: 0 on success, -1 on failure
  */
-int write_unsigned_base(unsigned long int num, unsigned int base,
+int write_num_full(unsigned long int num, flags_t *flags, int base,
 		int uppercase, int *count)
 {
-	const char *digits_lower = "0123456789abcdef";
-	const char *digits_upper = "0123456789ABCDEF";
-	const char *digits;
+	int len, padding, zeros = 0;
 
-	if (base < 2 || base > 16)
+	if (num == 0 && flags->precision == 0)
+		len = 0;
+	else
+		len = get_num_len(num, base);
+
+	if (flags->precision > len)
+		zeros = flags->precision - len;
+
+	if (flags->hash && num != 0)
+		len += (base == 8 && !zeros) ? 1 : (base == 16 ? 2 : 0);
+
+	padding = flags->width - (len + zeros);
+	if (write_padding(padding, count) == -1)
 		return (-1);
 
-	digits = uppercase ? digits_upper : digits_lower;
-
-	if (num >= base)
+	if (flags->hash && num != 0)
 	{
-		if (write_unsigned_base(num / base, base, uppercase, count) == -1)
+		if (base == 8 && !zeros && write_char('0', count) == -1)
 			return (-1);
+		if (base == 16)
+		{
+			if (write_char('0', count) == -1 ||
+			    write_char(uppercase ? 'X' : 'x', count) == -1)
+				return (-1);
+		}
 	}
-	return (write_char(digits[num % base], count));
+
+	while (zeros > 0)
+	{
+		if (write_char('0', count) == -1)
+			return (-1);
+		zeros--;
+	}
+
+	if (len > 0 || (flags->hash && num != 0 && base == 8))
+		if (!(num == 0 && flags->precision == 0))
+			return (write_unsigned_base(num, base, uppercase, count));
+	return (0);
 }
