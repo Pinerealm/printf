@@ -96,19 +96,21 @@ int write_string(const char *str, int *count)
  */
 int write_number(long num, int *count)
 {
+	unsigned long int n;
+
 	if (num < 0)
 	{
 		if (write_char('-', count) == -1)
 			return (-1);
-		num = -num;
+		n = (unsigned long int)num;
+		n = -n;
+	}
+	else
+	{
+		n = (unsigned long int)num;
 	}
 
-	if (num / 10)
-	{
-		if (write_number(num / 10, count) == -1)
-			return (-1);
-	}
-	return (write_char((num % 10) + '0', count));
+	return (write_unsigned_base(n, 10, 0, count));
 }
 
 /**
