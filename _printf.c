@@ -96,6 +96,8 @@ static int process_specifier(const char *format, int *index,
 	while (*index < i)
 	{
 		(*index)++;
+		if (format[*index] == 'l' || format[*index] == 'h')
+			continue;
 		if (write_char(format[*index], count) == -1)
 			return (-1);
 	}
