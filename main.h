@@ -39,18 +39,18 @@ int write_number(long num, int *count);
 int write_unsigned_base(unsigned long int num, unsigned int base,
 		int uppercase, int *count);
 
-int handle_char(va_list args, int *count);
-int handle_string(va_list args, int *count);
-int handle_percent(va_list args, int *count);
-int handle_int(va_list args, int *count);
+int handle_char(va_list args, flags_t *flags, int *count);
+int handle_string(va_list args, flags_t *flags, int *count);
+int handle_percent(va_list args, flags_t *flags, int *count);
+int handle_int(va_list args, flags_t *flags, int *count);
 
-int handle_binary(va_list args, int *count);
-int handle_unsigned(va_list args, int *count);
-int handle_octal(va_list args, int *count);
-int handle_hex_lower(va_list args, int *count);
+int handle_binary(va_list args, flags_t *flags, int *count);
+int handle_unsigned(va_list args, flags_t *flags, int *count);
+int handle_octal(va_list args, flags_t *flags, int *count);
+int handle_hex_lower(va_list args, flags_t *flags, int *count);
 
-int handle_hex_upper(va_list args, int *count);
-int handle_string_special(va_list args, int *count);
-int handle_pointer(va_list args, int *count);
+int handle_hex_upper(va_list args, flags_t *flags, int *count);
+int handle_string_special(va_list args, flags_t *flags, int *count);
+int handle_pointer(va_list args, flags_t *flags, int *count);
 
 #endif /* MAIN_H */
