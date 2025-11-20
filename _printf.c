@@ -2,7 +2,7 @@
 
 static int process_specifier(const char *format, int *index,
 		va_list args, int *count);
-static int (*get_spec_handler(char spec))(va_list, int *);
+static int (*get_spec_handler(char spec))(va_list, flags_t *, int *);
 
 /**
  * _printf - custom printf implementation
@@ -58,19 +58,44 @@ int _printf(const char *format, ...)
 static int process_specifier(const char *format, int *index,
 		va_list args, int *count)
 {
-	int (*handler)(va_list, int *);
+	int (*handler)(va_list, flags_t *, int *);
+	flags_t flags = {0, 0, 0};
+	int i = *index + 1;
 
-	(*index)++;
-	if (format[*index] == '\0')
+	while (format[i])
+	{
+		if (format[i] == '+')
+			flags.plus = 1;
+		else if (format[i] == ' ')
+			flags.space = 1;
+		else if (format[i] == '#')
+			flags.hash = 1;
+		else
+			break;
+		i++;
+	}
+
+	if (format[i] == '\0')
 		return (-1);
 
-	handler = get_spec_handler(format[*index]);
+	handler = get_spec_handler(format[i]);
 	if (handler)
-		return (handler(args, count));
+	{
+		*index = i;
+		return (handler(args, &flags, count));
+	}
 
 	if (write_char('%', count) == -1)
 		return (-1);
-	return (write_char(format[*index], count));
+
+	/* Print the flags and the character that caused the mismatch */
+	while (*index < i)
+	{
+		(*index)++;
+		if (write_char(format[*index], count) == -1)
+			return (-1);
+	}
+	return (0);
 }
 
 /**
@@ -79,7 +104,7 @@ static int process_specifier(const char *format, int *index,
  *
  * Return: pointer to handler function or NULL if unsupported
  */
-static int (*get_spec_handler(char spec))(va_list, int *)
+static int (*get_spec_handler(char spec))(va_list, flags_t *, int *)
 {
 	spec_handler_t handlers[] = {
 		{'c', handle_char},
