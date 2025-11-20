@@ -12,12 +12,23 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 {
 	void *ptr = va_arg(args, void *);
 	unsigned long int addr;
+	int len, padding;
 
-	(void)flags;
 	if (!ptr)
+	{
+		len = 5; /* Length of "(nil)" */
+		padding = flags->width - len;
+		if (write_padding(padding, count) == -1)
+			return (-1);
 		return (write_string("(nil)", count));
+	}
 
 	addr = (unsigned long int)ptr;
+	len = get_num_len(addr, 16) + 2;
+
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
 
 	/* Print "0x" prefix */
 	if (write_char('0', count) == -1)

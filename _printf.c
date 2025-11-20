@@ -3,6 +3,7 @@
 static int process_specifier(const char *format, int *index,
 		va_list args, int *count);
 static int (*get_spec_handler(char spec))(va_list, flags_t *, int *);
+static void parse_flags(const char *format, int *i, flags_t *flags);
 
 /**
  * _printf - custom printf implementation
@@ -13,8 +14,7 @@ static int (*get_spec_handler(char spec))(va_list, flags_t *, int *);
 int _printf(const char *format, ...)
 {
 	va_list args;
-	int count = 0;
-	int f_idx = 0;
+	int count = 0, f_idx = 0;
 
 	if (!format)
 		return (-1);
@@ -47,6 +47,48 @@ int _printf(const char *format, ...)
 }
 
 /**
+ * parse_flags - parses flags, width, and length modifiers
+ * @format: format string
+ * @i: current index in format string
+ * @flags: flags struct to populate
+ */
+static void parse_flags(const char *format, int *i, flags_t *flags)
+{
+	/* Parse flags */
+	while (format[*i])
+	{
+		if (format[*i] == '+')
+			flags->plus = 1;
+		else if (format[*i] == ' ')
+			flags->space = 1;
+		else if (format[*i] == '#')
+			flags->hash = 1;
+		else
+			break;
+		(*i)++;
+	}
+
+	/* Parse width */
+	while (format[*i] >= '0' && format[*i] <= '9')
+	{
+		flags->width = flags->width * 10 + (format[*i] - '0');
+		(*i)++;
+	}
+
+	/* Parse length modifiers */
+	if (format[*i] == 'l')
+	{
+		flags->long_num = 1;
+		(*i)++;
+	}
+	else if (format[*i] == 'h')
+	{
+		flags->short_num = 1;
+		(*i)++;
+	}
+}
+
+/**
  * process_specifier - handles a percent sequence inside the format
  * @format: format string being parsed
  * @index: pointer to the current index within the string
@@ -59,25 +101,10 @@ static int process_specifier(const char *format, int *index,
 		va_list args, int *count)
 {
 	int (*handler)(va_list, flags_t *, int *);
-	flags_t flags = {0, 0, 0, 0, 0};
+	flags_t flags = {0, 0, 0, 0, 0, 0};
 	int i = *index + 1;
 
-	while (format[i])
-	{
-		if (format[i] == '+')
-			flags.plus = 1;
-		else if (format[i] == ' ')
-			flags.space = 1;
-		else if (format[i] == '#')
-			flags.hash = 1;
-		else if (format[i] == 'l')
-			flags.long_num = 1;
-		else if (format[i] == 'h')
-			flags.short_num = 1;
-		else
-			break;
-		i++;
-	}
+	parse_flags(format, &i, &flags);
 
 	if (format[i] == '\0')
 		return (-1);

@@ -11,6 +11,9 @@
  * @plus: flag for '+'
  * @space: flag for ' '
  * @hash: flag for '#'
+ * @long_num: flag for 'l' length modifier
+ * @short_num: flag for 'h' length modifier
+ * @width: field width
  */
 typedef struct flags
 {
@@ -19,6 +22,7 @@ typedef struct flags
 	int hash;
 	int long_num;
 	int short_num;
+	int width;
 } flags_t;
 
 /**
@@ -40,6 +44,10 @@ int write_string(const char *str, int *count);
 int write_number(long num, int *count);
 int write_unsigned_base(unsigned long int num, unsigned int base,
 		int uppercase, int *count);
+
+int get_num_len(unsigned long int num, unsigned int base);
+char get_sign_char(int is_neg, flags_t *flags);
+int write_padding(int padding, int *count);
 
 int handle_char(va_list args, flags_t *flags, int *count);
 int handle_string(va_list args, flags_t *flags, int *count);

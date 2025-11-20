@@ -11,8 +11,11 @@
 int handle_char(va_list args, flags_t *flags, int *count)
 {
 	char c = (char)va_arg(args, int);
+	int padding = flags->width - 1;
 
-	(void)flags;
+	if (write_padding(padding, count) == -1)
+		return (-1);
+
 	return (write_char(c, count));
 }
 
@@ -27,8 +30,18 @@ int handle_char(va_list args, flags_t *flags, int *count)
 int handle_string(va_list args, flags_t *flags, int *count)
 {
 	char *str = va_arg(args, char *);
+	int len = 0, padding;
 
-	(void)flags;
+	if (!str)
+		str = "(null)";
+
+	while (str[len])
+		len++;
+
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
+
 	return (write_string(str, count));
 }
 
@@ -58,6 +71,10 @@ int handle_percent(va_list args, flags_t *flags, int *count)
 int handle_int(va_list args, flags_t *flags, int *count)
 {
 	long num;
+	unsigned long int n;
+	int is_neg = 0;
+	int len, padding;
+	char sign_char = 0;
 
 	if (flags->long_num)
 		num = va_arg(args, long int);
@@ -66,18 +83,33 @@ int handle_int(va_list args, flags_t *flags, int *count)
 	else
 		num = va_arg(args, int);
 
-	if (flags->plus && num >= 0)
+	if (num < 0)
 	{
-		if (write_char('+', count) == -1)
-			return (-1);
+		is_neg = 1;
+		n = (unsigned long int)-num;
 	}
-	else if (flags->space && num >= 0)
+	else
 	{
-		if (write_char(' ', count) == -1)
+		n = (unsigned long int)num;
+	}
+
+	sign_char = get_sign_char(is_neg, flags);
+
+	len = get_num_len(n, 10);
+	if (sign_char)
+		len++;
+
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
+
+	if (sign_char)
+	{
+		if (write_char(sign_char, count) == -1)
 			return (-1);
 	}
 
-	return (write_number(num, count));
+	return (write_unsigned_base(n, 10, 0, count));
 }
 
 /**

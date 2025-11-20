@@ -27,6 +27,7 @@ int handle_binary(va_list args, flags_t *flags, int *count)
 int handle_unsigned(va_list args, flags_t *flags, int *count)
 {
 	unsigned long int num;
+	int len, padding;
 
 	if (flags->long_num)
 		num = va_arg(args, unsigned long int);
@@ -34,6 +35,11 @@ int handle_unsigned(va_list args, flags_t *flags, int *count)
 		num = (unsigned short)va_arg(args, unsigned int);
 	else
 		num = va_arg(args, unsigned int);
+
+	len = get_num_len(num, 10);
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
 
 	return (write_unsigned_base(num, 10, 0, count));
 }
@@ -49,6 +55,7 @@ int handle_unsigned(va_list args, flags_t *flags, int *count)
 int handle_octal(va_list args, flags_t *flags, int *count)
 {
 	unsigned long int num;
+	int len, padding;
 
 	if (flags->long_num)
 		num = va_arg(args, unsigned long int);
@@ -56,6 +63,14 @@ int handle_octal(va_list args, flags_t *flags, int *count)
 		num = (unsigned short)va_arg(args, unsigned int);
 	else
 		num = va_arg(args, unsigned int);
+
+	len = get_num_len(num, 8);
+	if (flags->hash && num != 0)
+		len++;
+
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
 
 	if (flags->hash && num != 0)
 	{
@@ -76,6 +91,7 @@ int handle_octal(va_list args, flags_t *flags, int *count)
 int handle_hex_lower(va_list args, flags_t *flags, int *count)
 {
 	unsigned long int num;
+	int len, padding;
 
 	if (flags->long_num)
 		num = va_arg(args, unsigned long int);
@@ -83,6 +99,14 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count)
 		num = (unsigned short)va_arg(args, unsigned int);
 	else
 		num = va_arg(args, unsigned int);
+
+	len = get_num_len(num, 16);
+	if (flags->hash && num != 0)
+		len += 2;
+
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
 
 	if (flags->hash && num != 0)
 	{
@@ -105,6 +129,7 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count)
 int handle_hex_upper(va_list args, flags_t *flags, int *count)
 {
 	unsigned long int num;
+	int len, padding;
 
 	if (flags->long_num)
 		num = va_arg(args, unsigned long int);
@@ -112,6 +137,14 @@ int handle_hex_upper(va_list args, flags_t *flags, int *count)
 		num = (unsigned short)va_arg(args, unsigned int);
 	else
 		num = va_arg(args, unsigned int);
+
+	len = get_num_len(num, 16);
+	if (flags->hash && num != 0)
+		len += 2;
+
+	padding = flags->width - len;
+	if (write_padding(padding, count) == -1)
+		return (-1);
 
 	if (flags->hash && num != 0)
 	{
