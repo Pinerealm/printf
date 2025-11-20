@@ -33,6 +33,14 @@ This project implements a custom `_printf()` function that replicates the core f
 - `l` - Applies to: `d`, `i`, `u`, `o`, `x`, `X` (long int / unsigned long int)
 - `h` - Applies to: `d`, `i`, `u`, `o`, `x`, `X` (short int / unsigned short int)
 
+### Width and Precision
+
+- **Width**: Minimum number of characters to be printed. If the value to be printed is shorter than this number, the result is padded with blank spaces. The value is not truncated even if the result is larger.
+- **Precision**:
+  - For integer specifiers (`d`, `i`, `u`, `o`, `x`, `X`): Minimum number of digits to be written. If the value to be written is shorter than this number, the result is padded with leading zeros. The value is not truncated even if the result is longer.
+  - For `s`: Maximum number of characters to be printed.
+  - For `*`: Both width and precision can be specified as an argument using `*`.
+
 ### Special Behaviors
 
 - NULL strings print as `(null)`
@@ -49,6 +57,7 @@ This project implements a custom `_printf()` function that replicates the core f
 ├── handlers_numeric.c  # Numeric conversion handlers
 ├── handlers_pointer.c  # Pointer handler
 ├── utils.c            # Buffered I/O utilities
+├── utils_2.c          # Numeric formatting helpers
 ├── main.h             # Header file with function prototypes
 └── test_main/         # Test files (optional)
 ```
@@ -59,7 +68,7 @@ Compile with:
 
 ```bash
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -Wno-format \
-    _printf.c handlers.c handlers_numeric.c handlers_pointer.c utils.c test_main/main.c \
+    _printf.c handlers.c handlers_numeric.c handlers_pointer.c utils.c utils_2.c test_main/main.c \
     -o a.out
 ```
 
