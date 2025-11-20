@@ -1,98 +1,107 @@
 #include "main.h"
 
+static int process_specifier(const char *format, int *index,
+		va_list args, int *count);
+static int (*get_spec_handler(char spec))(va_list, int *);
+
 /**
- * _printf - custom-made printf implementation
+ * _printf - custom printf implementation
  * @format: format string
  *
- * Return: number of bytes written
+ * Return: number of characters printed or -1 on failure
  */
-
 int _printf(const char *format, ...)
 {
-	va_list ap;
-	unsigned int f_idx = 0, b_idx = 0;
-	int printed = 0;
-	char l_buf[BUFFER_SIZE];
+	va_list args;
+	int count = 0;
+	int f_idx = 0;
 
 	if (!format)
 		return (-1);
-	va_start(ap, format);
 
+	va_start(args, format);
 	while (format[f_idx])
 	{
-		if (b_idx == BUFFER_SIZE)
-		{
-			printed += print_buffer(l_buf, &b_idx);
-		}
 		if (format[f_idx] == '%')
 		{
-			if (!format[f_idx + 1]) /* if % is the last char */
+			if (process_specifier(format, &f_idx, args, &count) == -1)
+			{
+				va_end(args);
 				return (-1);
-			handle_format(format[++f_idx], ap, l_buf, &b_idx);
-			f_idx++;
+			}
 		}
-		else
-			l_buf[b_idx++] = format[f_idx++];
-	}
-	va_end(ap);
-	printed += print_buffer(l_buf, &b_idx);
-
-	return (printed);
-}
-
-/**
- * handle_format - handles the format specifier(s)
- * @c: format specifier
- * @ap: va_list
- * @buf: buffer to write to
- * @b_idx: pointer to buffer index
- *
- * Return: number of bytes written
- */
-int
-handle_format(const char c, va_list ap, char *buf, unsigned int *b_idx)
-{
-	int printed = 0, f_idx = 0;
-	format_t formats[] = {
-		{'c', print_char}, {'%', print_percent},
-		{'s', print_string}, {'d', print_decimal},
-		{'i', print_decimal}, {'b', print_binary},
-		{'o', print_octal}, {'u', print_unsigned_decimal},
-		{'x', print_hex}, {'X', print_hex_upper},
-		{'S', print_string_ascii}, {0, NULL}
-	};
-
-	while (formats[f_idx].spec)
-	{
-		if (c == formats[f_idx].spec)
-			return (formats[f_idx].f(ap, buf, b_idx));
+		else if (write_char(format[f_idx], &count) == -1)
+		{
+			va_end(args);
+			return (-1);
+		}
 		f_idx++;
 	}
-	buf[(*b_idx)++] = '%';
-	buf[(*b_idx)++] = c;
-	printed = 2;
-
-	return (printed);
+	if (flush_buffer(&count) == -1)
+	{
+		va_end(args);
+		return (-1);
+	}
+	va_end(args);
+	return (count);
 }
 
 /**
- * print_buffer - prints the buffer
- * @buffer: buffer to print
- * @b_idx: pointer to buffer index
+ * process_specifier - handles a percent sequence inside the format
+ * @format: format string being parsed
+ * @index: pointer to the current index within the string
+ * @args: variadic arguments list
+ * @count: pointer to printed characters count
  *
- * Return: number of bytes written
+ * Return: 0 on success, -1 on failure
  */
-int print_buffer(char *buffer, unsigned int *b_idx)
+static int process_specifier(const char *format, int *index,
+		va_list args, int *count)
 {
-	ssize_t written;
+	int (*handler)(va_list, int *);
 
-	if (*b_idx == 0)
-		return (0);
-
-	written = write(1, buffer, *b_idx);
-	if (written == -1)
+	(*index)++;
+	if (format[*index] == '\0')
 		return (-1);
 
-	*b_idx = 0;
-	return ((int)written);
+	handler = get_spec_handler(format[*index]);
+	if (handler)
+		return (handler(args, count));
+
+	if (write_char('%', count) == -1)
+		return (-1);
+	return (write_char(format[*index], count));
+}
+
+/**
+ * get_spec_handler - retrieves a handler for a specifier
+ * @spec: conversion specifier character
+ *
+ * Return: pointer to handler function or NULL if unsupported
+ */
+static int (*get_spec_handler(char spec))(va_list, int *)
+{
+	spec_handler_t handlers[] = {
+		{'c', handle_char},
+		{'s', handle_string},
+		{'S', handle_string_special},
+		{'p', handle_pointer},
+		{'%', handle_percent},
+		{'d', handle_int},
+		{'i', handle_int},
+		{'b', handle_binary},
+		{'u', handle_unsigned},
+		{'o', handle_octal},
+		{'x', handle_hex_lower},
+		{'X', handle_hex_upper}
+	};
+	int i;
+	int handler_count = sizeof(handlers) / sizeof(handlers[0]);
+
+	for (i = 0; i < handler_count; i++)
+	{
+		if (handlers[i].spec == spec)
+			return (handlers[i].handler);
+	}
+	return (0);
 }

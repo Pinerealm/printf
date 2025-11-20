@@ -1,45 +1,43 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
+
 #define BUFFER_SIZE 1024
 
 /**
- * struct format - link between format specifier and function
- * @spec: format specifier
- * @f: function to handle format specifier
+ * struct spec_handler - maps a specifier to its handler
+ * @spec: the conversion specifier character
+ * @handler: pointer to the handler function
  */
-typedef struct format
+typedef struct spec_handler
 {
 	char spec;
-	int (*f)(va_list, char *, unsigned int *);
-} format_t;
+	int (*handler)(va_list args, int *count);
+} spec_handler_t;
 
-/* Function prototypes */
 int _printf(const char *format, ...);
-int _putchar(char c);
-int handle_format(const char c, va_list ap);
-int print_string(va_list ap);
+int flush_buffer(int *count);
 
-int print_decimal(va_list ap);
-int print_decimal_helper(unsigned int n);
-int print_char(va_list ap);
-int print_percent(va_list ap);
+int write_char(char c, int *count);
+int write_string(const char *str, int *count);
+int write_number(long num, int *count);
+int write_unsigned_base(unsigned long int num, unsigned int base,
+		int uppercase, int *count);
 
-int print_binary(va_list ap);
-int print_binary_helper(unsigned int n);
-int print_octal(va_list ap);
-int print_octal_helper(unsigned int n);
+int handle_char(va_list args, int *count);
+int handle_string(va_list args, int *count);
+int handle_percent(va_list args, int *count);
+int handle_int(va_list args, int *count);
 
-int print_unsigned_decimal(va_list ap);
-int print_hex(va_list ap);
-int print_hex_helper(unsigned int n);
-int print_hex_upper(va_list ap);
+int handle_binary(va_list args, int *count);
+int handle_unsigned(va_list args, int *count);
+int handle_octal(va_list args, int *count);
+int handle_hex_lower(va_list args, int *count);
 
-int print_hex_upper_helper(unsigned int n);
-int print_buffer(char *buffer, unsigned int *idx);
-int print_string_ascii(va_list ap);
+int handle_hex_upper(va_list args, int *count);
+int handle_string_special(va_list args, int *count);
+int handle_pointer(va_list args, int *count);
 
 #endif /* MAIN_H */
