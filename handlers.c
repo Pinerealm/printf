@@ -38,11 +38,14 @@ int handle_string(va_list args, flags_t *flags, int *count)
 	while (str[len])
 		len++;
 
+	if (flags->precision >= 0 && flags->precision < len)
+		len = flags->precision;
+
 	padding = flags->width - len;
 	if (write_padding(padding, count) == -1)
 		return (-1);
 
-	return (write_string(str, count));
+	return (write_string_len(str, len, count));
 }
 
 /**
@@ -72,44 +75,37 @@ int handle_int(va_list args, flags_t *flags, int *count)
 {
 	long num;
 	unsigned long int n;
-	int is_neg = 0;
-	int len, padding;
-	char sign_char = 0;
+	int is_neg, len, padding, zeros = 0;
+	char sign_char;
 
 	if (flags->long_num)
 		num = va_arg(args, long int);
-	else if (flags->short_num)
-		num = (short)va_arg(args, int);
 	else
-		num = va_arg(args, int);
+		num = flags->short_num ? (short)va_arg(args, int) : va_arg(args, int);
 
-	if (num < 0)
-	{
-		is_neg = 1;
-		n = (unsigned long int)-num;
-	}
-	else
-	{
-		n = (unsigned long int)num;
-	}
-
+	is_neg = (num < 0);
+	n = is_neg ? (unsigned long int)-num : (unsigned long int)num;
+	len = (n == 0 && flags->precision == 0) ? 0 : get_num_len(n, 10);
+	zeros = (flags->precision > len) ? flags->precision - len : 0;
 	sign_char = get_sign_char(is_neg, flags);
+	padding = flags->width - (len + zeros + (sign_char ? 1 : 0));
 
-	len = get_num_len(n, 10);
-	if (sign_char)
-		len++;
-
-	padding = flags->width - len;
 	if (write_padding(padding, count) == -1)
 		return (-1);
 
-	if (sign_char)
+	if (sign_char && write_char(sign_char, count) == -1)
+		return (-1);
+
+	while (zeros > 0)
 	{
-		if (write_char(sign_char, count) == -1)
+		if (write_char('0', count) == -1)
 			return (-1);
+		zeros--;
 	}
 
-	return (write_unsigned_base(n, 10, 0, count));
+	if (len > 0)
+		return (write_unsigned_base(n, 10, 0, count));
+	return (0);
 }
 
 /**
@@ -125,33 +121,24 @@ int handle_string_special(va_list args, flags_t *flags, int *count)
 	char *str = va_arg(args, char *);
 	unsigned char c;
 	int i = 0;
+	const char *hex = "0123456789ABCDEF";
 
 	(void)flags;
 	if (!str)
-		return (write_string("(null)", count));
+		return (write_string_len("(null)", 6, count));
 
 	while (str[i])
 	{
 		c = (unsigned char)str[i];
-		/* Check if character is non-printable */
 		if (c < 32 || c >= 127)
 		{
-			/* Print \x */
-			if (write_char('\\', count) == -1)
-				return (-1);
-			if (write_char('x', count) == -1)
-				return (-1);
-			/* Print hex value (always 2 characters, uppercase) */
-			/* Print first hex digit */
-			if (write_unsigned_base((c >> 4) & 0xF, 16, 1, count) == -1)
-				return (-1);
-			/* Print second hex digit */
-			if (write_unsigned_base(c & 0xF, 16, 1, count) == -1)
+			if (write_char('\\', count) == -1 || write_char('x', count) == -1 ||
+			    write_char(hex[(c >> 4) & 0xF], count) == -1 ||
+			    write_char(hex[c & 0xF], count) == -1)
 				return (-1);
 		}
 		else
 		{
-			/* Print printable character normally */
 			if (write_char(c, count) == -1)
 				return (-1);
 		}

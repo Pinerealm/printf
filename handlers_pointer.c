@@ -12,7 +12,7 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 {
 	void *ptr = va_arg(args, void *);
 	unsigned long int addr;
-	int len, padding;
+	int len, padding, zeros = 0;
 
 	if (!ptr)
 	{
@@ -20,13 +20,18 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 		padding = flags->width - len;
 		if (write_padding(padding, count) == -1)
 			return (-1);
-		return (write_string("(nil)", count));
+		return (write_string_len("(nil)", 5, count));
 	}
 
 	addr = (unsigned long int)ptr;
-	len = get_num_len(addr, 16) + 2;
+	len = get_num_len(addr, 16);
 
-	padding = flags->width - len;
+	if (flags->precision > len)
+		zeros = flags->precision - len;
+
+	len += 2; /* For "0x" */
+
+	padding = flags->width - (len + zeros);
 	if (write_padding(padding, count) == -1)
 		return (-1);
 
@@ -35,6 +40,13 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 		return (-1);
 	if (write_char('x', count) == -1)
 		return (-1);
+
+	while (zeros > 0)
+	{
+		if (write_char('0', count) == -1)
+			return (-1);
+		zeros--;
+	}
 
 	/* Print address in lowercase hexadecimal */
 	return (write_unsigned_base(addr, 16, 0, count));
