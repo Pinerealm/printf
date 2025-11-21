@@ -26,7 +26,7 @@ static void parse_width(const char *format, int *i, flags_t *flags,
 		if (w < 0)
 		{
 			flags->width = -w;
-			/* TODO: Handle '-' flag for left alignment */
+			flags->minus = 1;
 		}
 		(*i)++;
 	}
@@ -93,6 +93,8 @@ static void parse_flags(const char *format, int *i, flags_t *flags,
 			flags->hash = 1;
 		else if (format[*i] == '0')
 			flags->zero = 1;
+		else if (format[*i] == '-')
+			flags->minus = 1;
 		else
 			break;
 		(*i)++;
@@ -127,7 +129,7 @@ int process_specifier(const char *format, int *index,
 		va_list args, int *count)
 {
 	int (*handler)(va_list, flags_t *, int *);
-	flags_t flags = {0, 0, 0, 0, 0, 0, 0, -1};
+	flags_t flags = {0, 0, 0, 0, 0, 0, 0, 0, -1};
 	int i = *index + 1;
 
 	parse_flags(format, &i, &flags, args);
