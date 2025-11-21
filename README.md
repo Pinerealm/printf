@@ -20,6 +20,7 @@ This project implements a custom `_printf()` function that replicates the core f
 - `%b` - Unsigned binary
 - `%p` - Pointer address
 - `%S` - String with non-printable characters as `\xXX`
+- `%r` - Reversed string
 - `%%` - Literal percent sign
 
 ### Supported Flags
@@ -47,7 +48,7 @@ This project implements a custom `_printf()` function that replicates the core f
 
 - NULL strings print as `(null)`
 - NULL pointers print as `(nil)`
-- Unknown specifiers print literally (e.g., `%r` → `%r`)
+- Unknown specifiers print literally (e.g., `%k` → `%k`)
 - Length modifiers are ignored for unknown specifiers (e.g., `%hZ` → `%Z`)
 - Non-printable characters in `%S` displayed as `\xXX` in uppercase hex
 
@@ -85,7 +86,7 @@ int main(void)
     _printf("Address:[%p]\n", (void *)0x7ffe637541f0);
     _printf("Percent:[%%]\n");
     _printf("Len:[%d]\n", len);
-    _printf("Unknown:[%r]\n");
+    _printf("Reversed:[%r]\n", "Hello");
     
     /* Width and Precision */
     _printf("Width: %10d\n", 123);
