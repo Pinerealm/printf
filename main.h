@@ -12,6 +12,7 @@
  * @space: flag for ' '
  * @hash: flag for '#'
  * @zero: flag for '0' padding
+ * @minus: flag for '-' (left alignment)
  * @long_num: flag for 'l' length modifier
  * @short_num: flag for 'h' length modifier
  * @width: field width
@@ -23,6 +24,7 @@ typedef struct flags
 	int space;
 	int hash;
 	int zero;
+	int minus;
 	int long_num;
 	int short_num;
 	int width;
@@ -54,6 +56,8 @@ int get_num_len(unsigned long int num, unsigned int base);
 char get_sign_char(int is_neg, flags_t *flags);
 int write_chars(char c, int n, int *count);
 int write_padded(int padding, char pad_char, const char *prefix, int *count);
+int write_number(unsigned long int num, flags_t *flags, int base,
+		char *prefix, int uppercase, int *count);
 
 int process_specifier(const char *format, int *index,
 		va_list args, int *count);
@@ -71,5 +75,8 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count);
 int handle_hex_upper(va_list args, flags_t *flags, int *count);
 int handle_string_special(va_list args, flags_t *flags, int *count);
 int handle_pointer(va_list args, flags_t *flags, int *count);
+
+int write_string(const char *str, int *count);
+unsigned long int get_unsigned_val(va_list args, flags_t *flags);
 
 #endif /* MAIN_H */

@@ -81,6 +81,28 @@ int write_string_len(const char *str, int len, int *count)
 }
 
 /**
+ * write_string - writes a null-terminated string to stdout (buffered)
+ * @str: string to write
+ * @count: pointer to printed characters count
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int write_string(const char *str, int *count)
+{
+	int i = 0;
+
+	if (!str)
+		return (0);
+
+	while (str[i])
+	{
+		if (write_char(str[i++], count) == -1)
+			return (-1);
+	}
+	return (0);
+}
+
+/**
  * write_num_full - writes a number with full formatting
  * @num: number to write
  * @flags: active flags
@@ -93,9 +115,9 @@ int write_string_len(const char *str, int len, int *count)
 int write_num_full(unsigned long int num, flags_t *flags, int base,
 		int uppercase, int *count)
 {
-	int len, padding, zeros = 0;
-	char pad_char = ' ';
 	char prefix[3] = {0};
+	int len = 0;
+	int zeros = 0;
 
 	if (num == 0 && flags->precision == 0)
 		len = 0;
@@ -107,7 +129,6 @@ int write_num_full(unsigned long int num, flags_t *flags, int base,
 
 	if (flags->hash && num != 0)
 	{
-		len += (base == 8 && !zeros) ? 1 : (base == 16 ? 2 : 0);
 		if (base == 8 && !zeros)
 			prefix[0] = '0';
 		if (base == 16)
@@ -117,19 +138,6 @@ int write_num_full(unsigned long int num, flags_t *flags, int base,
 		}
 	}
 
-	if (flags->zero && flags->precision == -1)
-		pad_char = '0';
-
-	padding = flags->width - (len + zeros);
-
-	if (write_padded(padding, pad_char, prefix[0] ? prefix : NULL, count) == -1)
-		return (-1);
-
-	if (write_chars('0', zeros, count) == -1)
-		return (-1);
-
-	if (len > 0 || (flags->hash && num != 0 && base == 8))
-		if (!(num == 0 && flags->precision == 0))
-			return (write_unsigned_base(num, base, uppercase, count));
-	return (0);
+	return (write_number(num, flags, base, prefix[0] ? prefix : NULL,
+			uppercase, count));
 }

@@ -26,14 +26,7 @@ int handle_binary(va_list args, flags_t *flags, int *count)
  */
 int handle_unsigned(va_list args, flags_t *flags, int *count)
 {
-	unsigned long int num;
-
-	if (flags->long_num)
-		num = va_arg(args, unsigned long int);
-	else if (flags->short_num)
-		num = (unsigned short)va_arg(args, unsigned int);
-	else
-		num = va_arg(args, unsigned int);
+	unsigned long int num = get_unsigned_val(args, flags);
 
 	return (write_num_full(num, flags, 10, 0, count));
 }
@@ -48,14 +41,7 @@ int handle_unsigned(va_list args, flags_t *flags, int *count)
  */
 int handle_octal(va_list args, flags_t *flags, int *count)
 {
-	unsigned long int num;
-
-	if (flags->long_num)
-		num = va_arg(args, unsigned long int);
-	else if (flags->short_num)
-		num = (unsigned short)va_arg(args, unsigned int);
-	else
-		num = va_arg(args, unsigned int);
+	unsigned long int num = get_unsigned_val(args, flags);
 
 	return (write_num_full(num, flags, 8, 0, count));
 }
@@ -70,14 +56,7 @@ int handle_octal(va_list args, flags_t *flags, int *count)
  */
 int handle_hex_lower(va_list args, flags_t *flags, int *count)
 {
-	unsigned long int num;
-
-	if (flags->long_num)
-		num = va_arg(args, unsigned long int);
-	else if (flags->short_num)
-		num = (unsigned short)va_arg(args, unsigned int);
-	else
-		num = va_arg(args, unsigned int);
+	unsigned long int num = get_unsigned_val(args, flags);
 
 	return (write_num_full(num, flags, 16, 0, count));
 }
@@ -92,14 +71,7 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count)
  */
 int handle_hex_upper(va_list args, flags_t *flags, int *count)
 {
-	unsigned long int num;
-
-	if (flags->long_num)
-		num = va_arg(args, unsigned long int);
-	else if (flags->short_num)
-		num = (unsigned short)va_arg(args, unsigned int);
-	else
-		num = va_arg(args, unsigned int);
+	unsigned long int num = get_unsigned_val(args, flags);
 
 	return (write_num_full(num, flags, 16, 1, count));
 }

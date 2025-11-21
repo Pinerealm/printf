@@ -54,17 +54,8 @@ int write_padded(int padding, char pad_char, const char *prefix, int *count)
 {
 	if (pad_char == '0')
 	{
-		if (prefix)
-		{
-			int i = 0;
-
-			while (prefix[i])
-			{
-				if (write_char(prefix[i], count) == -1)
-					return (-1);
-				i++;
-			}
-		}
+		if (write_string(prefix, count) == -1)
+			return (-1);
 		if (write_chars('0', padding, count) == -1)
 			return (-1);
 	}
@@ -72,64 +63,24 @@ int write_padded(int padding, char pad_char, const char *prefix, int *count)
 	{
 		if (write_chars(' ', padding, count) == -1)
 			return (-1);
-		if (prefix)
-		{
-			int i = 0;
-
-			while (prefix[i])
-			{
-				if (write_char(prefix[i], count) == -1)
-					return (-1);
-				i++;
-			}
-		}
-	}
-	return (0);
-}
-
-/**
- * get_sign_char - determines the sign character based on flags and value
- * @is_neg: whether the number is negative
- * @flags: active flags
- *
- * Return: sign character or 0
- */
-char get_sign_char(int is_neg, flags_t *flags)
-{
-	if (is_neg)
-		return ('-');
-	if (flags->plus)
-		return ('+');
-	if (flags->space)
-		return (' ');
-	return (0);
-}
-
-/**
- * write_unsigned_base - writes an unsigned number in any base
- * @num: number to write
- * @base: base between 2 and 16
- * @uppercase: non-zero for uppercase digits
- * @count: pointer to printed characters count
- *
- * Return: 0 on success, -1 on failure
- */
-int write_unsigned_base(unsigned long int num, unsigned int base,
-		int uppercase, int *count)
-{
-	const char *digits_lower = "0123456789abcdef";
-	const char *digits_upper = "0123456789ABCDEF";
-	const char *digits;
-
-	if (base < 2 || base > 16)
-		return (-1);
-
-	digits = uppercase ? digits_upper : digits_lower;
-
-	if (num >= base)
-	{
-		if (write_unsigned_base(num / base, base, uppercase, count) == -1)
+		if (write_string(prefix, count) == -1)
 			return (-1);
 	}
-	return (write_char(digits[num % base], count));
+	return (0);
+}
+
+/**
+ * get_unsigned_val - retrieves an unsigned value based on length modifiers
+ * @args: variadic list
+ * @flags: active flags
+ *
+ * Return: the retrieved value cast to unsigned long int
+ */
+unsigned long int get_unsigned_val(va_list args, flags_t *flags)
+{
+	if (flags->long_num)
+		return (va_arg(args, unsigned long int));
+	if (flags->short_num)
+		return ((unsigned short)va_arg(args, unsigned int));
+	return (va_arg(args, unsigned int));
 }
