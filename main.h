@@ -21,6 +21,7 @@ typedef struct flags
 	int plus;
 	int space;
 	int hash;
+	int zero;
 	int long_num;
 	int short_num;
 	int width;
