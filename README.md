@@ -21,6 +21,7 @@ This project implements a custom `_printf()` function that replicates the core f
 - `%p` - Pointer address
 - `%S` - String with non-printable characters as `\xXX`
 - `%r` - Reversed string
+- `%R` - Rot13 string
 - `%%` - Literal percent sign
 
 ### Supported Flags
@@ -87,6 +88,7 @@ int main(void)
     _printf("Percent:[%%]\n");
     _printf("Len:[%d]\n", len);
     _printf("Reversed:[%r]\n", "Hello");
+    _printf("Rot13:[%R]\n", "Hello");
     
     /* Width and Precision */
     _printf("Width: %10d\n", 123);
