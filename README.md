@@ -24,9 +24,11 @@ This project implements a custom `_printf()` function that replicates the core f
 
 ### Supported Flags
 
+- `-` - Left-aligns the result within the given field width (default is right alignment).
 - `+` - Forces to precede the result with a plus or minus sign (+ or -) even for positive numbers.
 - `space` - If no sign is going to be written, a blank space is inserted before the value.
 - `#` - Used with o, x or X specifiers the value is preceded with 0, 0x or 0X respectively, for values different than zero.
+- `0` - Pads with zeros instead of spaces. Ignored if precision is specified for integers.
 
 ### Length Modifiers
 
@@ -52,12 +54,14 @@ This project implements a custom `_printf()` function that replicates the core f
 ## Project Structure
 
 ```text
-├── _printf.c           # Main function and format string parser
+├── _printf.c           # Main _printf function
+├── parser.c            # Format string parsing logic
 ├── handlers.c          # Basic format specifier handlers
 ├── handlers_numeric.c  # Numeric conversion handlers
 ├── handlers_pointer.c  # Pointer handler
 ├── utils.c            # Buffered I/O utilities
 ├── utils_2.c          # Numeric formatting helpers
+├── utils_3.c          # Additional formatting helpers
 ├── main.h             # Header file with function prototypes
 └── test_main/         # Test files (optional)
 ```
@@ -98,7 +102,7 @@ Compile with:
 
 ```bash
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -Wno-format \
-    _printf.c handlers.c handlers_numeric.c handlers_pointer.c utils.c utils_2.c test_main/main.c \
+    _printf.c parser.c handlers.c handlers_numeric.c handlers_pointer.c utils.c utils_2.c utils_3.c test_main/main.c \
     -o a.out
 ```
 
