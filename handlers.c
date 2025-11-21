@@ -76,7 +76,7 @@ int handle_int(va_list args, flags_t *flags, int *count)
 	long num;
 	unsigned long int n;
 	int is_neg, len, padding, zeros = 0;
-	char sign_char;
+	char sign_char, pad_char = ' ';
 
 	if (flags->long_num)
 		num = va_arg(args, long int);
@@ -88,13 +88,30 @@ int handle_int(va_list args, flags_t *flags, int *count)
 	len = (n == 0 && flags->precision == 0) ? 0 : get_num_len(n, 10);
 	zeros = (flags->precision > len) ? flags->precision - len : 0;
 	sign_char = get_sign_char(is_neg, flags);
+
+	if (flags->zero && flags->precision == -1)
+		pad_char = '0';
+
 	padding = flags->width - (len + zeros + (sign_char ? 1 : 0));
 
-	if (write_padding(padding, count) == -1)
-		return (-1);
-
-	if (sign_char && write_char(sign_char, count) == -1)
-		return (-1);
+	if (pad_char == '0')
+	{
+		if (sign_char && write_char(sign_char, count) == -1)
+			return (-1);
+		while (padding > 0)
+		{
+			if (write_char('0', count) == -1)
+				return (-1);
+			padding--;
+		}
+	}
+	else
+	{
+		if (write_padding(padding, count) == -1)
+			return (-1);
+		if (sign_char && write_char(sign_char, count) == -1)
+			return (-1);
+	}
 
 	while (zeros > 0)
 	{

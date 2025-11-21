@@ -13,6 +13,7 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 	void *ptr = va_arg(args, void *);
 	unsigned long int addr;
 	int len, padding, zeros = 0;
+	char pad_char = ' ';
 
 	if (!ptr)
 	{
@@ -31,15 +32,29 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 
 	len += 2; /* For "0x" */
 
-	padding = flags->width - (len + zeros);
-	if (write_padding(padding, count) == -1)
-		return (-1);
+	if (flags->zero && flags->precision == -1)
+		pad_char = '0';
 
-	/* Print "0x" prefix */
-	if (write_char('0', count) == -1)
-		return (-1);
-	if (write_char('x', count) == -1)
-		return (-1);
+	padding = flags->width - (len + zeros);
+
+	if (pad_char == '0')
+	{
+		if (write_char('0', count) == -1 || write_char('x', count) == -1)
+			return (-1);
+		while (padding > 0)
+		{
+			if (write_char('0', count) == -1)
+				return (-1);
+			padding--;
+		}
+	}
+	else
+	{
+		if (write_padding(padding, count) == -1)
+			return (-1);
+		if (write_char('0', count) == -1 || write_char('x', count) == -1)
+			return (-1);
+	}
 
 	while (zeros > 0)
 	{

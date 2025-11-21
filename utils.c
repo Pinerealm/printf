@@ -94,6 +94,7 @@ int write_num_full(unsigned long int num, flags_t *flags, int base,
 		int uppercase, int *count)
 {
 	int len, padding, zeros = 0;
+	char pad_char = ' ';
 
 	if (num == 0 && flags->precision == 0)
 		len = 0;
@@ -106,19 +107,46 @@ int write_num_full(unsigned long int num, flags_t *flags, int base,
 	if (flags->hash && num != 0)
 		len += (base == 8 && !zeros) ? 1 : (base == 16 ? 2 : 0);
 
-	padding = flags->width - (len + zeros);
-	if (write_padding(padding, count) == -1)
-		return (-1);
+	if (flags->zero && flags->precision == -1)
+		pad_char = '0';
 
-	if (flags->hash && num != 0)
+	padding = flags->width - (len + zeros);
+
+	if (pad_char == '0')
 	{
-		if (base == 8 && !zeros && write_char('0', count) == -1)
-			return (-1);
-		if (base == 16)
+		if (flags->hash && num != 0)
 		{
-			if (write_char('0', count) == -1 ||
-			    write_char(uppercase ? 'X' : 'x', count) == -1)
+			if (base == 8 && !zeros && write_char('0', count) == -1)
 				return (-1);
+			if (base == 16)
+			{
+				if (write_char('0', count) == -1 ||
+				    write_char(uppercase ? 'X' : 'x', count) == -1)
+					return (-1);
+			}
+		}
+		while (padding > 0)
+		{
+			if (write_char('0', count) == -1)
+				return (-1);
+			padding--;
+		}
+	}
+	else
+	{
+		if (write_padding(padding, count) == -1)
+			return (-1);
+
+		if (flags->hash && num != 0)
+		{
+			if (base == 8 && !zeros && write_char('0', count) == -1)
+				return (-1);
+			if (base == 16)
+			{
+				if (write_char('0', count) == -1 ||
+				    write_char(uppercase ? 'X' : 'x', count) == -1)
+					return (-1);
+			}
 		}
 	}
 
