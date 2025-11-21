@@ -23,19 +23,66 @@ int get_num_len(unsigned long int num, unsigned int base)
 }
 
 /**
- * write_padding - writes padding spaces
- * @padding: number of spaces to write
+ * write_chars - writes n characters to stdout
+ * @c: character to write
+ * @n: number of times to write
  * @count: pointer to printed characters count
  *
  * Return: 0 on success, -1 on failure
  */
-int write_padding(int padding, int *count)
+int write_chars(char c, int n, int *count)
 {
-	while (padding > 0)
+	while (n > 0)
 	{
-		if (write_char(' ', count) == -1)
+		if (write_char(c, count) == -1)
 			return (-1);
-		padding--;
+		n--;
+	}
+	return (0);
+}
+
+/**
+ * write_padded - writes padding and optional prefix
+ * @padding: number of padding characters
+ * @pad_char: character to use for padding (' ' or '0')
+ * @prefix: optional prefix string (e.g., "0x", "+")
+ * @count: pointer to printed characters count
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int write_padded(int padding, char pad_char, const char *prefix, int *count)
+{
+	if (pad_char == '0')
+	{
+		if (prefix)
+		{
+			int i = 0;
+
+			while (prefix[i])
+			{
+				if (write_char(prefix[i], count) == -1)
+					return (-1);
+				i++;
+			}
+		}
+		if (write_chars('0', padding, count) == -1)
+			return (-1);
+	}
+	else
+	{
+		if (write_chars(' ', padding, count) == -1)
+			return (-1);
+		if (prefix)
+		{
+			int i = 0;
+
+			while (prefix[i])
+			{
+				if (write_char(prefix[i], count) == -1)
+					return (-1);
+				i++;
+			}
+		}
 	}
 	return (0);
 }

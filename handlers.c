@@ -13,7 +13,7 @@ int handle_char(va_list args, flags_t *flags, int *count)
 	char c = (char)va_arg(args, int);
 	int padding = flags->width - 1;
 
-	if (write_padding(padding, count) == -1)
+	if (write_chars(' ', padding, count) == -1)
 		return (-1);
 
 	return (write_char(c, count));
@@ -42,7 +42,7 @@ int handle_string(va_list args, flags_t *flags, int *count)
 		len = flags->precision;
 
 	padding = flags->width - len;
-	if (write_padding(padding, count) == -1)
+	if (write_chars(' ', padding, count) == -1)
 		return (-1);
 
 	return (write_string_len(str, len, count));
@@ -77,6 +77,7 @@ int handle_int(va_list args, flags_t *flags, int *count)
 	unsigned long int n;
 	int is_neg, len, padding, zeros = 0;
 	char sign_char, pad_char = ' ';
+	char sign_str[2] = {0, 0};
 
 	if (flags->long_num)
 		num = va_arg(args, long int);
@@ -88,37 +89,20 @@ int handle_int(va_list args, flags_t *flags, int *count)
 	len = (n == 0 && flags->precision == 0) ? 0 : get_num_len(n, 10);
 	zeros = (flags->precision > len) ? flags->precision - len : 0;
 	sign_char = get_sign_char(is_neg, flags);
+	if (sign_char)
+		sign_str[0] = sign_char;
 
 	if (flags->zero && flags->precision == -1)
 		pad_char = '0';
 
 	padding = flags->width - (len + zeros + (sign_char ? 1 : 0));
 
-	if (pad_char == '0')
-	{
-		if (sign_char && write_char(sign_char, count) == -1)
-			return (-1);
-		while (padding > 0)
-		{
-			if (write_char('0', count) == -1)
-				return (-1);
-			padding--;
-		}
-	}
-	else
-	{
-		if (write_padding(padding, count) == -1)
-			return (-1);
-		if (sign_char && write_char(sign_char, count) == -1)
-			return (-1);
-	}
+	if (write_padded(padding, pad_char,
+			sign_str[0] ? sign_str : NULL, count) == -1)
+		return (-1);
 
-	while (zeros > 0)
-	{
-		if (write_char('0', count) == -1)
-			return (-1);
-		zeros--;
-	}
+	if (write_chars('0', zeros, count) == -1)
+		return (-1);
 
 	if (len > 0)
 		return (write_unsigned_base(n, 10, 0, count));

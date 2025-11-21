@@ -19,7 +19,7 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 	{
 		len = 5; /* Length of "(nil)" */
 		padding = flags->width - len;
-		if (write_padding(padding, count) == -1)
+		if (write_chars(' ', padding, count) == -1)
 			return (-1);
 		return (write_string_len("(nil)", 5, count));
 	}
@@ -37,31 +37,11 @@ int handle_pointer(va_list args, flags_t *flags, int *count)
 
 	padding = flags->width - (len + zeros);
 
-	if (pad_char == '0')
-	{
-		if (write_char('0', count) == -1 || write_char('x', count) == -1)
-			return (-1);
-		while (padding > 0)
-		{
-			if (write_char('0', count) == -1)
-				return (-1);
-			padding--;
-		}
-	}
-	else
-	{
-		if (write_padding(padding, count) == -1)
-			return (-1);
-		if (write_char('0', count) == -1 || write_char('x', count) == -1)
-			return (-1);
-	}
+	if (write_padded(padding, pad_char, "0x", count) == -1)
+		return (-1);
 
-	while (zeros > 0)
-	{
-		if (write_char('0', count) == -1)
-			return (-1);
-		zeros--;
-	}
+	if (write_chars('0', zeros, count) == -1)
+		return (-1);
 
 	/* Print address in lowercase hexadecimal */
 	return (write_unsigned_base(addr, 16, 0, count));
