@@ -75,6 +75,7 @@ int handle_hex_lower(va_list args, flags_t *flags, int *count);
 int handle_hex_upper(va_list args, flags_t *flags, int *count);
 int handle_string_special(va_list args, flags_t *flags, int *count);
 int handle_pointer(va_list args, flags_t *flags, int *count);
+int handle_reversed(va_list args, flags_t *flags, int *count);
 
 int write_string(const char *str, int *count);
 unsigned long int get_unsigned_val(va_list args, flags_t *flags);
