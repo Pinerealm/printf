@@ -180,7 +180,8 @@ static int (*get_spec_handler(char spec))(va_list, flags_t *, int *)
 		{'o', handle_octal},
 		{'x', handle_hex_lower},
 		{'X', handle_hex_upper},
-		{'r', handle_reversed}
+		{'r', handle_reversed},
+		{'R', handle_rot13}
 	};
 	int i;
 	int handler_count = sizeof(handlers) / sizeof(handlers[0]);

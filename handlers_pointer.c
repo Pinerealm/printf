@@ -75,3 +75,51 @@ int handle_reversed(va_list args, flags_t *flags, int *count)
 	}
 	return (0);
 }
+
+/**
+ * handle_rot13 - writes the string in rot13
+ * @args: variadic list
+ * @flags: active flags
+ * @count: pointer to printed characters count
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int handle_rot13(va_list args, flags_t *flags, int *count)
+{
+	char *str = va_arg(args, char *);
+	int i, len = 0, padding;
+	char c, base;
+
+	if (!str)
+		str = "(null)";
+
+	while (str[len])
+		len++;
+
+	padding = flags->width - len;
+
+	if (!flags->minus)
+	{
+		if (write_chars(' ', padding, count) == -1)
+			return (-1);
+	}
+
+	for (i = 0; str[i]; i++)
+	{
+		c = str[i];
+		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+		{
+			base = (c >= 'a') ? 'a' : 'A';
+			c = (c - base + 13) % 26 + base;
+		}
+		if (write_char(c, count) == -1)
+			return (-1);
+	}
+
+	if (flags->minus)
+	{
+		if (write_chars(' ', padding, count) == -1)
+			return (-1);
+	}
+	return (0);
+}
